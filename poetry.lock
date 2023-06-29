@@ -336,7 +336,19 @@ files = [
     {file = "typing_extensions-4.6.3.tar.gz", hash = "sha256:d91d5919357fe7f681a9f2b5b4cb2a5f1ef0a1e9f59c4d8ff0d3491e05c0ffd5"},
 ]
 
+[[package]]
+name = "uuid6"
+version = "2023.5.2"
+description = "New time-based UUID formats which are suited for use as a database key"
+category = "main"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "uuid6-2023.5.2-py3-none-any.whl", hash = "sha256:9a8125a621426f24d3e4811f9885e7c0c6567ed3cc47f68fe8d41112e603bf85"},
+    {file = "uuid6-2023.5.2.tar.gz", hash = "sha256:03cb97f25ca7b0ac4bea2b3a205f66bfe7f58d3b179bb0f76e1d7946446b6133"},
+]
+
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "f8ba741ebb554eb192cfe35f4adbb79758995352de65bc0dec08876c570554b5"
+content-hash = "8a0c6c6edf6a5e6e982ae4bb4bc5e73867a7316a8bb278e0af757f62c593deab"

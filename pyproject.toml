@@ -9,6 +9,7 @@ packages = [{include = "typeid"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
+uuid6 = "^2023.5.2"
 
 
 [tool.poetry.group.dev.dependencies]
