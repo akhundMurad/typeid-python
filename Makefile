@@ -1,13 +1,13 @@
 check-linting:
-	isort --check --profile black src/ tests/ examples/
-	flake8 --exit-zero src/ tests/ examples/ --exit-zero
-	black --check --diff src/ tests/ examples/ --line-length 119
-	mypy src/ --pretty
+	isort --check --profile black typeid/ tests/
+	flake8 --exit-zero typeid/ tests/ --exit-zero
+	black --check --diff typeid/ tests/ --line-length 119
+	mypy typeid/ --pretty
 
 
 fix-linting:
-	isort --profile black src/ tests/ examples/
-	black src/ tests/ examples/ --line-length 119
+	isort --profile black typeid/ tests/
+	black typeid/ tests/ --line-length 119
 
 
 artifacts: test

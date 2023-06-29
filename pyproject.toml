@@ -5,7 +5,7 @@ description = "Python implementation of TypeIDs: type-safe, K-sortable, and glob
 authors = ["Murad Akhundov <akhundov1murad@gmail.com>"]
 license = "MIT"
 readme = "README.md"
-packages = [{include = "typeid-python"}]
+packages = [{include = "typeid"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
