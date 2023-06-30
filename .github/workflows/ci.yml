@@ -1,0 +1,31 @@
+name: CI
+
+on: [pull_request]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Poetry
+        run: |
+          pip install --upgrade pip
+          pip install poetry
+          poetry install --with dev
+          source `poetry env info --path`/bin/activate
+      - name: Run linters
+        run: |
+          make check-linting
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Poetry
+        run: |
+          pip install --upgrade pip
+          pip install poetry
+          poetry install --with dev
+          source `poetry env info --path`/bin/activate
+      - name: Run tests
+        run: |
+          make test

@@ -1,0 +1,47 @@
+name: Build
+
+on:
+  release:
+    types: [published]
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - README.md
+      - CHANGELOG.md
+
+env:
+  PROJECT_NAME: typeid-python
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.7", "3.8", "3.9", "3.10", "3.11"]
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 9
+          submodules: false
+
+      - name: Use Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install Poetry
+        run: |
+          pip install --upgrade pip
+          pip install poetry
+          poetry install --with dev
+          source `poetry env info --path`/bin/activate
+
+      - name: Run tests
+        run: |
+          make test
+
+      - name: Run linters
+        run: |
+          make check-linting
