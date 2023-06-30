@@ -1,13 +1,13 @@
 check-linting:
-	isort --check --profile black typeid/ tests/
-	flake8 --exit-zero typeid/ tests/ --exit-zero
-	black --check --diff typeid/ tests/ --line-length 119
-	mypy typeid/ --pretty
+	poetry run isort --check --profile black typeid/ tests/
+	poetry run flake8 --exit-zero typeid/ tests/ --exit-zero
+	poetry run black --check --diff typeid/ tests/ --line-length 119
+	poetry run mypy typeid/ --pretty
 
 
 fix-linting:
-	isort --profile black typeid/ tests/
-	black typeid/ tests/ --line-length 119
+	poetry run isort --profile black typeid/ tests/
+	poetry run black typeid/ tests/ --line-length 119
 
 
 artifacts: test
@@ -35,4 +35,4 @@ release:
 
 
 test:
-	pytest -v
+	poetry run pytest -v
