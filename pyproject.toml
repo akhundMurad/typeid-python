@@ -6,6 +6,7 @@ authors = ["Murad Akhundov <akhundov1murad@gmail.com>"]
 license = "MIT"
 readme = "README.md"
 requires-python = ">=3.7"
+repository = "https://github.com/akhundMurad/typeid-python"
 classifiers = [
   "Development Status :: 3 - Alpha",
   "License :: OSI Approved :: MIT License",
@@ -17,14 +18,7 @@ classifiers = [
   "Operating System :: OS Independent",
 ]
 
-dependencies = ["uuid6"]
-
-keywords = [
-  "typeid",
-  "uuid",
-  "uuid6",
-  "guid",
-]
+keywords = ["typeid", "uuid", "uuid6", "guid"]
 
 [tool.hatch.build.targets.sdist]
 exclude = [
@@ -48,12 +42,8 @@ exclude = [
   "pytest.ini",
 ]
 
-[project.urls]
-"Homepage" = "https://github.com/akhundMurad/typeid-python"
-"Bug Tracker" = "https://github.com/akhundMurad/diator/typeid-python"
-
 [tool.poetry.dependencies]
-python = "^3.10"
+python = ">=3.7,<4"
 uuid6 = "^2023.5.2"
 
 
