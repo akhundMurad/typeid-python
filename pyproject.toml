@@ -22,7 +22,8 @@ dependencies = ["uuid6"]
 keywords = [
   "typeid",
   "uuid",
-  "uuid6",""
+  "uuid6",
+  "guid",
 ]
 
 [tool.hatch.build.targets.sdist]
@@ -48,8 +49,8 @@ exclude = [
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/akhundMurad/diator"
-"Bug Tracker" = "https://github.com/akhundMurad/diator/issues"
+"Homepage" = "https://github.com/akhundMurad/typeid-python"
+"Bug Tracker" = "https://github.com/akhundMurad/diator/typeid-python"
 
 [tool.poetry.dependencies]
 python = "^3.10"
