@@ -5,7 +5,6 @@ description = "Python implementation of TypeIDs: type-safe, K-sortable, and glob
 authors = ["Murad Akhundov <akhundov1murad@gmail.com>"]
 license = "MIT"
 readme = "README.md"
-requires-python = ">=3.7"
 repository = "https://github.com/akhundMurad/typeid-python"
 classifiers = [
   "Development Status :: 3 - Alpha",
