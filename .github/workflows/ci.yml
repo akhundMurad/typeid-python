@@ -8,11 +8,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Install Poetry
-        run: |
-          pip install --upgrade pip
-          pip install poetry
-          poetry install --with dev
-          source `poetry env info --path`/bin/activate
+        uses: snok/install-poetry@v1
       - name: Run linters
         run: |
           make check-linting
@@ -21,11 +17,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Install Poetry
-        run: |
-          pip install --upgrade pip
-          pip install poetry
-          poetry install --with dev
-          source `poetry env info --path`/bin/activate
+        uses: snok/install-poetry@v1
       - name: Run tests
         run: |
           make test
