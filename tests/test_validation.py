@@ -1,7 +1,7 @@
-import base64
-
 import pytest
+from uuid6 import uuid7
 
+from typeid import base32
 from typeid.errors import PrefixValidationException, SuffixValidationException
 from typeid.validation import validate_prefix, validate_suffix
 
@@ -30,7 +30,7 @@ def test_validate_not_ascii_prefix() -> None:
 
 
 def test_validate_correct_suffix() -> None:
-    suffix = base64.b32encode("asd".encode("ascii")).decode("utf-8")
+    suffix = base32.encode(list(uuid7().bytes))
 
     try:
         validate_suffix(suffix)

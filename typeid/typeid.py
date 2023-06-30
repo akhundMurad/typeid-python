@@ -1,13 +1,11 @@
-import base64
 from typing import Optional
 from uuid import UUID
 
 from uuid6 import uuid7
 
+from typeid import base32
 from typeid.errors import InvalidTypeIDStringException
 from typeid.validation import validate_prefix, validate_suffix
-
-B32_LEN = 26
 
 
 class TypeID:
@@ -17,15 +15,15 @@ class TypeID:
         if prefix:
             validate_prefix(prefix=prefix)
 
-        self._prefix = prefix
-        self._suffix = suffix[:26].lower()
+        self._prefix = prefix or ""
+        self._suffix = suffix
 
     @property
     def suffix(self) -> str:
         return self._suffix
 
     @property
-    def prefix(self) -> Optional[str]:
+    def prefix(self) -> str:
         return self._prefix
 
     def __str__(self) -> str:
@@ -35,22 +33,27 @@ class TypeID:
         value += self.suffix
         return value
 
+    def __eq__(self, value: object) -> bool:
+        if not isinstance(value, TypeID):
+            return False
+        return value.prefix == self.prefix and value.suffix == self.suffix
+
 
 def from_string(string: str) -> TypeID:
     parts = string.split("_")
 
     if len(parts) == 1:
-        return TypeID(suffix=parts[1])
+        return TypeID(suffix=parts[0])
     elif len(parts) == 2:
         return TypeID(suffix=parts[1], prefix=parts[0])
     else:
         raise InvalidTypeIDStringException(f"Invalid TypeID: {string}")
 
 
-def from_uuid(prefix: str, suffix: UUID) -> TypeID:
+def from_uuid(suffix: UUID, prefix: Optional[str] = None) -> TypeID:
     suffix_str = _convert_uuid_to_b32(suffix)
     return TypeID(suffix=suffix_str, prefix=prefix)
 
 
 def _convert_uuid_to_b32(uuid_instance: UUID) -> str:
-    return base64.b32encode(uuid_instance.bytes).decode("ascii")
+    return base32.encode(list(uuid_instance.bytes))
