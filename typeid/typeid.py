@@ -44,7 +44,7 @@ def from_string(string: str) -> TypeID:
 
     if len(parts) == 1:
         return TypeID(suffix=parts[0])
-    elif len(parts) == 2:
+    elif len(parts) == 2 and parts[0] != "":
         return TypeID(suffix=parts[1], prefix=parts[0])
     else:
         raise InvalidTypeIDStringException(f"Invalid TypeID: {string}")
