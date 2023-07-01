@@ -6,7 +6,6 @@ This page discribes how to contribute to typeid-python.
 
 - Linux, since all development proccess adapted for Linux machines.
 - supported Python version (e.g. Python 3.10 or Python 3.11).
-- Redis, since we have integration and end-to-end tests.
 
 ## Environment preparation
 
