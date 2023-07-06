@@ -303,9 +303,6 @@ def encode(src: list) -> str:
 
 
 def decode(s: str) -> list:
-    if len(s) != SUFFIX_LEN:
-        raise RuntimeError("Invalid length.")
-
     v = bytes(s, encoding="utf-8")
 
     if (
