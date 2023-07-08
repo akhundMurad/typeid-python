@@ -9,9 +9,7 @@ from typeid.validation import validate_prefix, validate_suffix
 
 
 class TypeID:
-    def __init__(
-        self, prefix: Optional[str] = None, suffix: Optional[str] = None
-    ) -> None:
+    def __init__(self, prefix: Optional[str] = None, suffix: Optional[str] = None) -> None:
         suffix = _convert_uuid_to_b32(uuid7()) if not suffix else suffix
         validate_suffix(suffix=suffix)
         if prefix:
