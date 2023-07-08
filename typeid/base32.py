@@ -1,3 +1,5 @@
+from typing import List
+
 from typeid.constants import SUFFIX_LEN
 
 ALPHABET = "0123456789abcdefghjkmnpqrstvwxyz"
@@ -263,7 +265,7 @@ TABLE = [
 ]
 
 
-def encode(src: list) -> str:
+def encode(src: List[int]) -> str:
     dst = [""] * SUFFIX_LEN
 
     if len(src) != 16:
@@ -302,7 +304,7 @@ def encode(src: list) -> str:
     return "".join(dst)
 
 
-def decode(s: str) -> list:
+def decode(s: str) -> List[int]:
     v = bytes(s, encoding="utf-8")
 
     if (

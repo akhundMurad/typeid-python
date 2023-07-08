@@ -40,19 +40,28 @@ class TypeID:
 
 
 def from_string(string: str) -> TypeID:
-    parts = string.split("_")
-
-    if len(parts) == 1:
-        return TypeID(suffix=parts[0])
-    elif len(parts) == 2 and parts[0] != "":
-        return TypeID(suffix=parts[1], prefix=parts[0])
-    else:
-        raise InvalidTypeIDStringException(f"Invalid TypeID: {string}")
+    prefix, suffix = get_prefix_and_suffix(string=string)
+    return TypeID(suffix=suffix, prefix=prefix)
 
 
 def from_uuid(suffix: UUID, prefix: Optional[str] = None) -> TypeID:
     suffix_str = _convert_uuid_to_b32(suffix)
     return TypeID(suffix=suffix_str, prefix=prefix)
+
+
+def get_prefix_and_suffix(string: str) -> tuple:
+    parts = string.split("_")
+    suffix = None
+    prefix = None
+    if len(parts) == 1:
+        suffix = parts[0]
+    elif len(parts) == 2 and parts[0] != "":
+        suffix = parts[1]
+        prefix = parts[0]
+    else:
+        raise InvalidTypeIDStringException(f"Invalid TypeID: {string}")
+
+    return prefix, suffix
 
 
 def _convert_uuid_to_b32(uuid_instance: UUID) -> str:
