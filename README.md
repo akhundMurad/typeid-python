@@ -91,14 +91,14 @@ This particular implementation provides an pip package that can be used by any P
 - To generate a new TypeID, run:
 
     ```console
-    $ typeid new -p prefix
+    $ python3 -m typeid.cli new -p prefix
     prefix_01h2xcejqtf2nbrexx3vqjhp41
     ```
 
 - To decode an existing TypeID into a UUID run:
 
     ```console
-    $ typeid decode prefix_01h2xcejqtf2nbrexx3vqjhp41
+    $ python3 -m typeid.cli decode prefix_01h2xcejqtf2nbrexx3vqjhp41
     type: prefix
     uuid: 0188bac7-4afa-78aa-bc3b-bd1eef28d881
     ```
@@ -106,6 +106,6 @@ This particular implementation provides an pip package that can be used by any P
 - And to encode an existing UUID into a TypeID run:
 
     ```console
-    $ typeid encode 0188bac7-4afa-78aa-bc3b-bd1eef28d881 --prefix prefix
+    $ python3 -m typeid.cli encode 0188bac7-4afa-78aa-bc3b-bd1eef28d881 --prefix prefix
     prefix_01h2xcejqtf2nbrexx3vqjhp41
     ```
