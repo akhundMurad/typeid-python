@@ -26,17 +26,19 @@ This particular implementation provides an pip package that can be used by any P
 
 - PyPI:
 
-    ```bash
+    ```console
     pip install typeid-python
     ```
 
 - Poetry:
 
-    ```bash
+    ```console
     poetry add typeid-python
     ```
 
 ## Usage
+
+### Basic
 
 - Create TypeID Instance:
 
@@ -76,4 +78,34 @@ This particular implementation provides an pip package that can be used by any P
     typeid = from_uuid(prefix=prefix, suffix=uuid)
 
     print(str(typeid))  # "user_01h45z113fexh8c1at7axm1r75"
+    ```
+
+### CLI-tool
+
+- Install dependencies:
+
+    ```console
+    pip install typeid-python[cli]
+    ```
+
+- To generate a new TypeID, run:
+
+    ```console
+    $ typeid new -p prefix
+    prefix_01h2xcejqtf2nbrexx3vqjhp41
+    ```
+
+- To decode an existing TypeID into a UUID run:
+
+    ```console
+    $ typeid decode prefix_01h2xcejqtf2nbrexx3vqjhp41
+    type: prefix
+    uuid: 0188bac7-4afa-78aa-bc3b-bd1eef28d881
+    ```
+
+- And to encode an existing UUID into a TypeID run:
+
+    ```console
+    $ typeid encode 0188bac7-4afa-78aa-bc3b-bd1eef28d881 --prefix prefix
+    prefix_01h2xcejqtf2nbrexx3vqjhp41
     ```
