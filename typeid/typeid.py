@@ -38,6 +38,9 @@ class TypeID:
             return False
         return value.prefix == self.prefix and value.suffix == self.suffix
 
+    def __hash__(self) -> int:
+        return hash((self.prefix, self.suffix))
+
 
 def from_string(string: str) -> TypeID:
     prefix, suffix = get_prefix_and_suffix(string=string)
