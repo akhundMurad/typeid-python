@@ -59,9 +59,9 @@ This particular implementation provides an pip package that can be used by any P
 - Create TypeID from string:
 
     ```python
-    from typeid import from_string
+    from typeid import TypeID
 
-    typeid = from_string("user_01h45ytscbebyvny4gc8cr8ma2")
+    typeid = TypeID.from_string("user_01h45ytscbebyvny4gc8cr8ma2")
 
     print(str(typeid))  # "user_01h45ytscbebyvny4gc8cr8ma2"
     ```
@@ -69,13 +69,13 @@ This particular implementation provides an pip package that can be used by any P
 - Create TypeID from uuid7:
 
     ```python
-    from typeid import from_uuid
+    from typeid import TypeID
     from uuid6 import uuid7
 
     uuid = uuid7()  # UUID('01890bf0-846f-7762-8605-5a3abb40e0e5')
     prefix = "user"
 
-    typeid = from_uuid(prefix=prefix, suffix=uuid)
+    typeid = TypeID.from_uuid(prefix=prefix, suffix=uuid)
 
     print(str(typeid))  # "user_01h45z113fexh8c1at7axm1r75"
     ```

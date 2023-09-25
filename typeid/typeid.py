@@ -18,6 +18,16 @@ class TypeID:
         self._prefix = prefix or ""
         self._suffix = suffix
 
+    @classmethod
+    def from_string(cls, string: str):
+        prefix, suffix = get_prefix_and_suffix(string=string)
+        return cls(suffix=suffix, prefix=prefix)
+
+    @classmethod
+    def from_uuid(cls, suffix: UUID, prefix: Optional[str] = None):
+        suffix_str = _convert_uuid_to_b32(suffix)
+        return TypeID(suffix=suffix_str, prefix=prefix)
+
     @property
     def suffix(self) -> str:
         return self._suffix
@@ -40,13 +50,13 @@ class TypeID:
 
 
 def from_string(string: str) -> TypeID:
-    prefix, suffix = get_prefix_and_suffix(string=string)
-    return TypeID(suffix=suffix, prefix=prefix)
+    """Consider TypeID.from_string instead."""
+    return TypeID.from_string(string=string)
 
 
 def from_uuid(suffix: UUID, prefix: Optional[str] = None) -> TypeID:
-    suffix_str = _convert_uuid_to_b32(suffix)
-    return TypeID(suffix=suffix_str, prefix=prefix)
+    """Consider TypeID.from_uuid instead."""
+    return TypeID.from_uuid(suffix=suffix, prefix=prefix)
 
 
 def get_prefix_and_suffix(string: str) -> tuple:
