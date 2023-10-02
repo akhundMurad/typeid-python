@@ -101,3 +101,15 @@ def test_construct_type_from_uuid_with_prefix() -> None:
     assert isinstance(typeid, TypeID)
     assert typeid.prefix == "prefix"
     assert isinstance(typeid.suffix, str)
+
+
+def test_hash_type_id() -> None:
+    prefix = "plov"
+    suffix = "00041061050r3gg28a1c60t3gf"
+
+    typeid_1 = TypeID(prefix=prefix, suffix=suffix)
+    typeid_2 = TypeID(prefix=prefix, suffix=suffix)
+    typeid_3 = TypeID(suffix=suffix)
+
+    assert hash(typeid_1) == hash(typeid_2)
+    assert hash(typeid_3) != hash(typeid_1)

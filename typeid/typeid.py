@@ -36,6 +36,10 @@ class TypeID:
     def prefix(self) -> str:
         return self._prefix
 
+    @property
+    def uuid(self) -> UUID:
+        return _convert_b32_to_uuid(self.suffix)
+
     def __str__(self) -> str:
         value = ""
         if self.prefix:
@@ -47,6 +51,9 @@ class TypeID:
         if not isinstance(value, TypeID):
             return False
         return value.prefix == self.prefix and value.suffix == self.suffix
+
+    def __hash__(self) -> int:
+        return hash((self.prefix, self.suffix))
 
 
 def from_string(string: str) -> TypeID:
@@ -76,3 +83,7 @@ def get_prefix_and_suffix(string: str) -> tuple:
 
 def _convert_uuid_to_b32(uuid_instance: UUID) -> str:
     return base32.encode(list(uuid_instance.bytes))
+
+
+def _convert_b32_to_uuid(b32: str) -> UUID:
+    return UUID(bytes=bytes(base32.decode(b32)))
