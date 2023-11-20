@@ -1,3 +1,4 @@
+import warnings
 from typing import Optional
 from uuid import UUID
 
@@ -47,6 +48,9 @@ class TypeID:
         value += self.suffix
         return value
 
+    def __repr__(self):
+        return "%s(%r)" % (self.__class__.__name__, str(self))
+
     def __eq__(self, value: object) -> bool:
         if not isinstance(value, TypeID):
             return False
@@ -57,12 +61,12 @@ class TypeID:
 
 
 def from_string(string: str) -> TypeID:
-    """Consider TypeID.from_string instead."""
+    warnings.warn("Consider TypeID.from_string instead.", DeprecationWarning)
     return TypeID.from_string(string=string)
 
 
 def from_uuid(suffix: UUID, prefix: Optional[str] = None) -> TypeID:
-    """Consider TypeID.from_uuid instead."""
+    warnings.warn("Consider TypeID.from_uuid instead.", DeprecationWarning)
     return TypeID.from_uuid(suffix=suffix, prefix=prefix)
 
 
