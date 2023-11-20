@@ -2,7 +2,7 @@ from typing import Optional
 
 from sqlalchemy import types
 from sqlalchemy.util import generic_repr
-from typeid import TypeID, from_uuid
+from typeid import TypeID
 
 
 class TypeIDType(types.TypeDecorator):
@@ -24,7 +24,7 @@ class TypeIDType(types.TypeDecorator):
 
     cache_ok = True
 
-    prefix: Optional[str]
+    prefix: Optional[str] = None
 
     def __init__(self, prefix: Optional[str], *args, **kwargs):
         self.prefix = prefix
@@ -48,4 +48,4 @@ class TypeIDType(types.TypeDecorator):
         return value.uuid
 
     def process_result_value(self, value, dialect):
-        return from_uuid(value, self.prefix)
+        return TypeID.from_uuid(value, self.prefix)
