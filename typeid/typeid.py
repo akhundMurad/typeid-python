@@ -56,6 +56,16 @@ class TypeID:
             return False
         return value.prefix == self.prefix and value.suffix == self.suffix
 
+    def __gt__(self, other):
+        if isinstance(other, TypeID):
+            return str(self) > str(other)
+        return NotImplemented
+
+    def __ge__(self, other):
+        if isinstance(other, TypeID):
+            return str(self) >= str(other)
+        return NotImplemented
+
     def __hash__(self) -> int:
         return hash((self.prefix, self.suffix))
 

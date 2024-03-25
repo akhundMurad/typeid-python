@@ -24,15 +24,24 @@ def test_construct_typeid() -> None:
 
 
 def test_compare_typeid() -> None:
-    prefix = "plov"
-    suffix = "00041061050r3gg28a1c60t3gf"
+    prefix_1 = "plov"
+    suffix_1 = "00041061050r3gg28a1c60t3gf"
+    prefix_2 = "abcd"
+    suffix_2 = "00000000000000000000000000"
 
-    typeid_1 = TypeID(prefix=prefix, suffix=suffix)
-    typeid_2 = TypeID(prefix=prefix, suffix=suffix)
-    typeid_3 = TypeID(suffix=suffix)
+    typeid_1 = TypeID(prefix=prefix_1, suffix=suffix_1)
+    typeid_2 = TypeID(prefix=prefix_1, suffix=suffix_1)
+    typeid_3 = TypeID(suffix=suffix_1)
+    typeid_4 = TypeID(prefix=prefix_2, suffix=suffix_1)
+    typeid_5 = TypeID(prefix=prefix_1, suffix=suffix_2)
 
     assert typeid_1 == typeid_2
+    assert typeid_1 <= typeid_2
+    assert typeid_1 >= typeid_2
     assert typeid_3 != typeid_1
+    assert typeid_3 < typeid_1
+    assert typeid_4 <= typeid_1
+    assert typeid_1 > typeid_5
 
 
 def test_construct_type_from_string() -> None:
