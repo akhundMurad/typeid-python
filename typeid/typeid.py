@@ -82,7 +82,6 @@ def from_uuid(suffix: UUID, prefix: Optional[str] = None) -> TypeID:
 
 def get_prefix_and_suffix(string: str) -> tuple:
     parts = string.split("_")
-    suffix = None
     prefix = None
     if len(parts) == 1:
         suffix = parts[0]
