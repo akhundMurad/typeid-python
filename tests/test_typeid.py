@@ -1,5 +1,5 @@
 import pytest
-from uuid6 import uuid7
+import uuid6
 
 from typeid import TypeID
 from typeid.errors import InvalidTypeIDStringException
@@ -92,7 +92,7 @@ def test_construct_type_from_invalid_string() -> None:
 
 
 def test_construct_type_from_uuid() -> None:
-    uuid = uuid7()
+    uuid = uuid6.uuid7()
 
     typeid = TypeID.from_uuid(suffix=uuid, prefix="")
 
@@ -102,7 +102,7 @@ def test_construct_type_from_uuid() -> None:
 
 
 def test_construct_type_from_uuid_with_prefix() -> None:
-    uuid = uuid7()
+    uuid = uuid6.uuid7()
     prefix = "prefix"
 
     typeid = TypeID.from_uuid(prefix=prefix, suffix=uuid)
@@ -122,3 +122,13 @@ def test_hash_type_id() -> None:
 
     assert hash(typeid_1) == hash(typeid_2)
     assert hash(typeid_3) != hash(typeid_1)
+
+
+def test_uuid_property() -> None:
+    uuid = uuid6.uuid7()
+
+    typeid = TypeID.from_uuid(suffix=uuid)
+
+    assert isinstance(typeid.uuid, uuid6.UUID)
+    assert typeid.uuid.version == uuid.version == 7
+    assert typeid.uuid.time == uuid.time
