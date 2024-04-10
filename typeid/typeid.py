@@ -27,7 +27,7 @@ class TypeID:
     @classmethod
     def from_uuid(cls, suffix: UUID, prefix: Optional[str] = None):
         suffix_str = _convert_uuid_to_b32(suffix)
-        return TypeID(suffix=suffix_str, prefix=prefix)
+        return cls(suffix=suffix_str, prefix=prefix)
 
     @property
     def suffix(self) -> str:
