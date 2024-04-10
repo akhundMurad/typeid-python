@@ -1,7 +1,7 @@
 import pytest
 from uuid6 import uuid7
 
-from typeid import TypeID, from_string, from_uuid
+from typeid import TypeID
 from typeid.errors import InvalidTypeIDStringException
 
 
@@ -57,7 +57,7 @@ def test_construct_type_from_string() -> None:
 def test_construct_type_from_string_standalone() -> None:
     string = "00041061050r3gg28a1c60t3gf"
 
-    typeid = from_string(string)
+    typeid = TypeID.from_string(string)
 
     assert isinstance(typeid, TypeID)
     assert typeid.prefix == ""
@@ -77,7 +77,7 @@ def test_construct_type_from_string_with_prefix() -> None:
 def test_construct_type_from_string_with_prefix_standalone() -> None:
     string = "prefix_00041061050r3gg28a1c60t3gf"
 
-    typeid = from_string(string)
+    typeid = TypeID.from_string(string)
 
     assert isinstance(typeid, TypeID)
     assert typeid.prefix == "prefix"
@@ -88,13 +88,13 @@ def test_construct_type_from_invalid_string() -> None:
     string = "invalid_string_to_typeid"
 
     with pytest.raises(InvalidTypeIDStringException):
-        from_string(string)
+        TypeID.from_string(string)
 
 
 def test_construct_type_from_uuid() -> None:
     uuid = uuid7()
 
-    typeid = from_uuid(suffix=uuid, prefix="")
+    typeid = TypeID.from_uuid(suffix=uuid, prefix="")
 
     assert isinstance(typeid, TypeID)
     assert typeid.prefix == ""
@@ -105,7 +105,7 @@ def test_construct_type_from_uuid_with_prefix() -> None:
     uuid = uuid7()
     prefix = "prefix"
 
-    typeid = from_uuid(prefix=prefix, suffix=uuid)
+    typeid = TypeID.from_uuid(prefix=prefix, suffix=uuid)
 
     assert isinstance(typeid, TypeID)
     assert typeid.prefix == "prefix"
