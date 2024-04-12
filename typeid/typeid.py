@@ -99,5 +99,5 @@ def _convert_uuid_to_b32(uuid_instance: uuid6.UUID) -> str:
 
 def _convert_b32_to_uuid(b32: str) -> uuid6.UUID:
     uuid_bytes = bytes(base32.decode(b32))
-    uuid_int = int.from_bytes(uuid_bytes, byteorder='big')
+    uuid_int = int.from_bytes(uuid_bytes, byteorder="big")
     return uuid6.UUID(int=uuid_int, version=7)
