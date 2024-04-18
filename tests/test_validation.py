@@ -15,6 +15,22 @@ def test_validate_correct_prefix() -> None:
         pytest.fail(str(exc))
 
 
+def test_validate_correct_prefix_with_underscores() -> None:
+    prefix = "plov_good"
+
+    try:
+        validate_prefix(prefix)
+    except PrefixValidationException as exc:
+        pytest.fail(str(exc))
+
+
+def test_validate_invalid_prefix_with_trailing_underscore() -> None:
+    prefix = "plov_bad_"
+
+    with pytest.raises(PrefixValidationException):
+        validate_prefix(prefix)
+
+
 def test_validate_uppercase_prefix() -> None:
     prefix = "Plov"
 
