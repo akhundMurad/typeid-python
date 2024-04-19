@@ -1,10 +1,13 @@
+import re
+
 from typeid import base32
-from typeid.constants import PREFIX_MAX_LEN, SUFFIX_LEN
+from typeid.constants import SUFFIX_LEN
 from typeid.errors import PrefixValidationException, SuffixValidationException
 
 
 def validate_prefix(prefix: str) -> None:
-    if not prefix.islower() or not prefix.isascii() or len(prefix) > PREFIX_MAX_LEN or not prefix.isalpha():
+    # See https://github.com/jetify-com/typeid/tree/main/spec
+    if not re.match("^([a-z]([a-z_]{0,61}[a-z])?)?$", prefix):
         raise PrefixValidationException(f"Invalid prefix: {prefix}.")
 
 
