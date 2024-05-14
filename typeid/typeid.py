@@ -84,6 +84,8 @@ def get_prefix_and_suffix(string: str) -> tuple:
     if len(parts) == 1:
         prefix = None
         suffix = parts[0]
+    elif len(parts) == 2 and parts[0] == "":
+        raise InvalidTypeIDStringException(f"Invalid TypeID: {string}")
     else:
         prefix, suffix = parts
 
