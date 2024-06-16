@@ -80,15 +80,14 @@ def from_uuid(suffix: uuid6.UUID, prefix: Optional[str] = None) -> TypeID:
 
 
 def get_prefix_and_suffix(string: str) -> tuple:
-    parts = string.split("_")
-    prefix = None
+    parts = string.rsplit("_", 1)
     if len(parts) == 1:
+        prefix = None
         suffix = parts[0]
-    elif len(parts) == 2 and parts[0] != "":
-        suffix = parts[1]
-        prefix = parts[0]
-    else:
+    elif len(parts) == 2 and parts[0] == "":
         raise InvalidTypeIDStringException(f"Invalid TypeID: {string}")
+    else:
+        prefix, suffix = parts
 
     return prefix, suffix
 

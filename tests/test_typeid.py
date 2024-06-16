@@ -2,7 +2,7 @@ import pytest
 import uuid6
 
 from typeid import TypeID
-from typeid.errors import InvalidTypeIDStringException
+from typeid.errors import SuffixValidationException
 
 
 def test_default_suffix() -> None:
@@ -84,10 +84,20 @@ def test_construct_type_from_string_with_prefix_standalone() -> None:
     assert isinstance(typeid.suffix, str)
 
 
+def test_construct_type_from_string_with_multi_underscore_prefix() -> None:
+    string = "double_prefix_00041061050r3gg28a1c60t3gf"
+
+    typeid = TypeID.from_string(string)
+
+    assert isinstance(typeid, TypeID)
+    assert typeid.prefix == "double_prefix"
+    assert isinstance(typeid.suffix, str)
+
+
 def test_construct_type_from_invalid_string() -> None:
     string = "invalid_string_to_typeid"
 
-    with pytest.raises(InvalidTypeIDStringException):
+    with pytest.raises(SuffixValidationException):
         TypeID.from_string(string)
 
 
