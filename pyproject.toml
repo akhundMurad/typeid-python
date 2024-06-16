@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "typeid-python"
-version = "0.3.0"
+version = "0.3.1"
 description = "Python implementation of TypeIDs: type-safe, K-sortable, and globally unique identifiers inspired by Stripe IDs"
 authors = ["Murad Akhundov <akhundov1murad@gmail.com>"]
 license = "MIT"
