@@ -2,13 +2,13 @@ class TypeIDException(Exception):
     ...
 
 
-class PrefixValidationException(Exception):
+class PrefixValidationException(TypeIDException):
     ...
 
 
-class SuffixValidationException(Exception):
+class SuffixValidationException(TypeIDException):
     ...
 
 
-class InvalidTypeIDStringException(Exception):
+class InvalidTypeIDStringException(TypeIDException):
     ...
