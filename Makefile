@@ -15,7 +15,7 @@ artifacts: test
 
 
 clean:
-	rm -rf dist/
+	rm -rf dist build *.egg-info
 
 
 prepforbuild:
@@ -23,7 +23,7 @@ prepforbuild:
 
 
 build:
-	python -m build
+	poetry build
 
 
 test-release:
