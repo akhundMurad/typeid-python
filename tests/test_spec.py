@@ -2,11 +2,12 @@ import pytest
 from uuid6 import UUID
 
 from typeid import TypeID
+from typeid.errors import TypeIDException
 
 
 def test_invalid_spec(invalid_spec: list) -> None:
     for spec in invalid_spec:
-        with pytest.raises(Exception):
+        with pytest.raises(TypeIDException):
             TypeID.from_string(spec["typeid"])
 
 
