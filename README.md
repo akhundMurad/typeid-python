@@ -109,5 +109,3 @@ This particular implementation provides an pip package that can be used by any P
     $ typeid encode 0188bac7-4afa-78aa-bc3b-bd1eef28d881 --prefix prefix
     prefix_01h2xcejqtf2nbrexx3vqjhp41
     ```
-
-You can l
