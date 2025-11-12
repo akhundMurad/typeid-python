@@ -48,7 +48,7 @@ class TypeID:
         return value
 
     def __repr__(self):
-        return "%s(%r)" % (self.__class__.__name__, str(self))
+        return "%s.from_string(%r)" % (self.__class__.__name__, str(self))
 
     def __eq__(self, value: object) -> bool:
         if not isinstance(value, TypeID):
