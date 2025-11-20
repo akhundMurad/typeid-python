@@ -5,12 +5,25 @@ This page discribes how to contribute to typeid-python.
 ## Requirements
 
 - Linux, since all development proccess adapted for Linux machines.
-- supported Python version (e.g. Python 3.11 or Python 3.12).
+- supported Python version (e.g. Python 3.14).
 
-## Environment preparation
+## Installation
 
-1. fork the [repository](https://github.com/akhundMurad/typeid-python)
-2. clone the forked repository
+1. Fork the [repository](https://github.com/akhundMurad/typeid-python).
+2. Clone the forked repository.
+3. Install [Poetry Packaging Manager](https://python-poetry.org/):
+
+```bash
+curl -sSL https://install.python-poetry.org | python3 -
+```
+
+4. Configure virtual environment:
+
+```bash
+poetry config virtualenvs.in-project true
+
+poetry install --with dev
+```
 
 ## Formatters
 
