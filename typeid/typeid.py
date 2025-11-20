@@ -2,6 +2,7 @@ import warnings
 from typing import Optional
 
 import uuid6
+import uuid
 
 from typeid import base32
 from typeid.errors import InvalidTypeIDStringException
@@ -24,7 +25,7 @@ class TypeID:
         return cls(suffix=suffix, prefix=prefix)
 
     @classmethod
-    def from_uuid(cls, suffix: uuid6.UUID, prefix: Optional[str] = None):
+    def from_uuid(cls, suffix: uuid.UUID, prefix: Optional[str] = None):
         suffix_str = _convert_uuid_to_b32(suffix)
         return cls(suffix=suffix_str, prefix=prefix)
 
@@ -74,7 +75,7 @@ def from_string(string: str) -> TypeID:
     return TypeID.from_string(string=string)
 
 
-def from_uuid(suffix: uuid6.UUID, prefix: Optional[str] = None) -> TypeID:
+def from_uuid(suffix: uuid.UUID, prefix: Optional[str] = None) -> TypeID:
     warnings.warn("Consider TypeID.from_uuid instead.", DeprecationWarning)
     return TypeID.from_uuid(suffix=suffix, prefix=prefix)
 
@@ -96,7 +97,7 @@ def get_prefix_and_suffix(string: str) -> tuple:
     return prefix, suffix
 
 
-def _convert_uuid_to_b32(uuid_instance: uuid6.UUID) -> str:
+def _convert_uuid_to_b32(uuid_instance: uuid.UUID) -> str:
     return base32.encode(list(uuid_instance.bytes))
 
 
