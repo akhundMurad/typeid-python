@@ -61,6 +61,9 @@ pyyaml = "^6.0"
 [tool.poetry.extras]
 cli = ["click"]
 
+[tool.poetry.scripts]
+typeid = "typeid.cli:cli"
+
 
 [tool.pylint]
 disable = ["C0111", "C0116", "C0114", "R0903"]
