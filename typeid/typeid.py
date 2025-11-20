@@ -1,8 +1,8 @@
+import uuid
 import warnings
 from typing import Optional
 
 import uuid6
-import uuid
 
 from typeid import base32
 from typeid.errors import InvalidTypeIDStringException
