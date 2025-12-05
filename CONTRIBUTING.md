@@ -30,9 +30,9 @@ poetry install --with dev
 We are using the following linters:
 
 - black
-- flake8
 - mypy
 - isort
+- ruff
 
 `Makefile` supports a task to run linters:
 
