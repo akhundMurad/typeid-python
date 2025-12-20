@@ -24,10 +24,16 @@ This particular implementation provides an pip package that can be used by any P
 
 ## Installation
 
-- PyPI:
+- Pip:
 
     ```console
     pip install typeid-python
+    ```
+
+- Uv:
+
+    ```console
+    uv add typeid-python
     ```
 
 - Poetry:
