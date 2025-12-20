@@ -16,6 +16,7 @@ from typing import Any, Dict, List, Optional
 
 class Provenance(str, Enum):
     """Where a piece of information came from."""
+
     DERIVED_FROM_ID = "derived_from_id"
     SCHEMA = "schema"
     EXTERNAL = "external"
@@ -25,6 +26,7 @@ class Provenance(str, Enum):
 @dataclass(frozen=True, slots=True)
 class ParseError:
     """Represents a recoverable parse/validation error."""
+
     code: str
     message: str
 
@@ -39,6 +41,7 @@ class ParsedTypeID:
     - `suffix` is the encoded UUIDv7 portion (base32 string).
     - `uuid` and `created_at` are *derived* from suffix if possible.
     """
+
     raw: str
     prefix: Optional[str]
     suffix: Optional[str]
@@ -61,6 +64,7 @@ class TypeSchema:
     breaking the Python API: we store raw dict and also normalize a few
     commonly-used fields for nicer UX.
     """
+
     prefix: str
     raw: Dict[str, Any] = field(default_factory=dict)
 
@@ -87,6 +91,7 @@ class Explanation:
     - links: rendered links (from schema templates), safe for display
     - provenance: per-field provenance labels for transparency
     """
+
     id: str
     valid: bool
 

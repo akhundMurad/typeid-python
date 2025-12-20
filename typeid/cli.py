@@ -1,12 +1,12 @@
+from pathlib import Path
 from typing import Optional
 
 import click
 from uuid6 import UUID
 
 from typeid import TypeID, base32, from_uuid, get_prefix_and_suffix
-
-from typeid.explain.engine import explain as explain_engine
 from typeid.explain.discovery import discover_schema_path
+from typeid.explain.engine import explain as explain_engine
 from typeid.explain.formatters import format_explanation_json, format_explanation_pretty
 from typeid.explain.registry import load_registry, make_lookup
 
@@ -49,7 +49,7 @@ def decode(encoded: str) -> None:
     type=click.Path(exists=True, dir_okay=False, path_type=str),
     required=False,
     help="Path to TypeID schema file (JSON, or YAML if PyYAML is installed). "
-         "If omitted, TypeID will try to discover a schema automatically.",
+    "If omitted, TypeID will try to discover a schema automatically.",
 )
 @click.option(
     "--json",
@@ -98,10 +98,6 @@ def explain(
             # we keep CLI robust and simply proceed without schema.
 
         if resolved_path:
-            result = load_registry(click.Path(resolved_path))
-            # NOTE: click.Path is not a real filesystem path. Convert to pathlib Path.
-            # We'll do it safely:
-            from pathlib import Path
             result = load_registry(Path(resolved_path))
 
             if result.registry is not None:

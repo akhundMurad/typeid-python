@@ -4,7 +4,6 @@ import pytest
 
 from typeid.explain.registry import load_registry
 
-
 yaml = pytest.importorskip("yaml")  # skip entire file if PyYAML is not installed
 
 

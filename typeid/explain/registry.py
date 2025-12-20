@@ -54,6 +54,7 @@ class SchemaRegistry:
 
     Lookup is by full TypeID prefix (which may contain underscores).
     """
+
     def __init__(self, *, schema_version: int, types: Dict[str, TypeSchema], source_path: Path):
         self.schema_version = schema_version
         self._types = types
@@ -145,10 +146,12 @@ def make_lookup(registry: Optional[SchemaRegistry]):
         lookup = make_lookup(reg)
         explanation = explain(id, schema_lookup=lookup)
     """
+
     def _lookup(prefix: str) -> Optional[TypeSchema]:
         if registry is None:
             return None
         return registry.get(prefix)
+
     return _lookup
 
 
@@ -183,8 +186,10 @@ def _read_schema_file(path: Path) -> Tuple[Dict[str, Any], str]:
     # If extension unknown, try JSON first for convenience.
     try:
         return json.loads(raw), "json"
-    except Exception:
-        raise RuntimeError(f"Unsupported schema file extension: {path.suffix!s} (supported: .json, .yaml, .yml)")
+    except Exception as e:
+        raise RuntimeError(
+            f"Unsupported schema file extension: {path.suffix!s} (supported: .json, .yaml, .yml)"
+        ) from e
 
 
 def _to_type_schema(prefix: str, spec: Dict[str, Any]) -> TypeSchema:

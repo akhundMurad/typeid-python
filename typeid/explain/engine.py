@@ -19,8 +19,7 @@ from typing import Any, Callable, Dict, Optional
 from typeid import TypeID
 from typeid.errors import TypeIDException
 
-from .model import Explanation, ParseError, ParsedTypeID, Provenance, TypeSchema
-
+from .model import Explanation, ParsedTypeID, ParseError, Provenance, TypeSchema
 
 SchemaLookup = Callable[[str], Optional[TypeSchema]]
 
@@ -183,6 +182,7 @@ def _uuid7_created_at(uuid_obj: Any) -> Optional[datetime]:
 
 class _SafeFormatDict(dict):
     """dict that leaves unknown placeholders intact instead of raising KeyError."""
+
     def __missing__(self, key: str) -> str:
         return "{" + key + "}"
 

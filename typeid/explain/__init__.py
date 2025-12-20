@@ -18,10 +18,10 @@ Public API:
 from pathlib import Path
 from typing import Optional
 
-from .engine import explain as _explain_engine
-from .registry import load_registry, make_lookup
 from .discovery import discover_schema_path
+from .engine import explain as _explain_engine
 from .model import Explanation
+from .registry import load_registry, make_lookup
 
 __all__ = [
     "explain",

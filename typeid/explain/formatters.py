@@ -118,6 +118,7 @@ def format_explanation_json(exp: Explanation, *, indent: int = 2) -> str:
 
 class SafeFormatDict(dict):
     """dict that leaves unknown placeholders intact rather than raising KeyError."""
+
     def __missing__(self, key: str) -> str:
         return "{" + key + "}"
 

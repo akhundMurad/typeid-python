@@ -22,7 +22,6 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable, Optional
 
-
 DEFAULT_CWD_CANDIDATES = (
     "typeid.schema.json",
     "typeid.schema.yaml",
@@ -39,6 +38,7 @@ DEFAULT_USER_CANDIDATES = (
 @dataclass(frozen=True, slots=True)
 class DiscoveryResult:
     """Result of schema discovery."""
+
     path: Optional[Path]
     source: str  # e.g., "env:TYPEID_SCHEMA", "cwd", "user_config", "none"
 
@@ -69,7 +69,7 @@ def discover_schema_path(
         return DiscoveryResult(path=None, source=f"env:{env_var} (not found)")
 
     # 2) Current working directory
-    cwd_path = (cwd or Path.cwd())
+    cwd_path = cwd or Path.cwd()
     for name in DEFAULT_CWD_CANDIDATES:
         p = cwd_path / name
         if p.is_file():
@@ -117,7 +117,7 @@ def iter_default_candidate_paths(*, cwd: Optional[Path] = None) -> Iterable[Path
 
     Useful for debugging or `typeid explain --debug-discovery` style features.
     """
-    cwd_path = (cwd or Path.cwd())
+    cwd_path = cwd or Path.cwd()
     for name in DEFAULT_CWD_CANDIDATES:
         yield cwd_path / name
 

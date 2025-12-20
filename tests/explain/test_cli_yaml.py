@@ -7,7 +7,6 @@ from click.testing import CliRunner
 from typeid import TypeID
 from typeid.cli import cli
 
-
 yaml = pytest.importorskip("yaml")  # skip if PyYAML not installed
 
 
