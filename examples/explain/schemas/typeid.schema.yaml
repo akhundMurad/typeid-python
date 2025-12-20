@@ -1,0 +1,24 @@
+schema_version: 1
+types:
+  user:
+    name: User
+    description: End-user account
+    owner_team: identity-platform
+    pii: true
+    retention: 7y
+    services: [user-service, auth-service]
+    storage:
+      primary:
+        kind: postgres
+        table: users
+        shard_by: tenant_id
+    events: [user.created, user.updated, user.deleted]
+    policies:
+      delete:
+        allowed: false
+        reason: GDPR retention policy
+    links:
+      docs: "https://docs.company/entities/user"
+      logs: "https://logs.company/search?q={id}"
+      trace: "https://traces.company/?q={id}"
+      admin: "https://admin.company/users/{id}"

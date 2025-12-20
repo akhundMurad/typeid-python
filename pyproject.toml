@@ -60,6 +60,7 @@ twine = "^6.2.0"
 
 [tool.poetry.extras]
 cli = ["click"]
+yaml = ["PyYAML"]
 
 [tool.poetry.scripts]
 typeid = "typeid.cli:cli"

@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "types": {
+    "user": {
+      "name": "User",
+      "description": "End-user account",
+      "owner_team": "identity-platform",
+      "pii": true,
+      "retention": "7y",
+      "services": ["user-service", "auth-service"],
+      "storage": {
+        "primary": { "kind": "postgres", "table": "users", "shard_by": "tenant_id" }
+      },
+      "events": ["user.created", "user.updated", "user.deleted"],
+      "policies": {
+        "delete": { "allowed": false, "reason": "GDPR retention policy" }
+      },
+      "links": {
+        "docs": "https://docs.company/entities/user",
+        "logs": "https://logs.company/search?q={id}",
+        "trace": "https://traces.company/?q={id}",
+        "admin": "https://admin.company/users/{id}"
+      }
+    },
+
+    "order": {
+      "name": "Order",
+      "description": "Customer purchase order",
+      "owner_team": "commerce-platform",
+      "pii": false,
+      "retention": "10y",
+      "services": ["order-service", "billing-service"],
+      "storage": {
+        "primary": { "kind": "postgres", "table": "orders", "shard_by": "region" }
+      },
+      "events": ["order.created", "order.paid", "order.refunded"],
+      "policies": {
+        "delete": { "allowed": true, "reason": "No compliance hold" }
+      },
+      "links": {
+        "admin": "https://admin.company/orders/{id}",
+        "logs": "https://logs.company/search?q={id}"
+      }
+    },
+
+    "evt_payment": {
+      "name": "PaymentEvent",
+      "description": "Event emitted by payment pipeline",
+      "owner_team": "payments",
+      "pii": false,
+      "retention": "30d",
+      "services": ["payment-service"],
+      "events": ["payment.authorized", "payment.failed", "payment.captured"],
+      "policies": {
+        "replay": { "allowed": false, "reason": "Non-idempotent event stream" }
+      },
+      "links": {
+        "kafka": "https://kafka-ui.company/topics/payment-events?key={id}",
+        "trace": "https://traces.company/?q={id}"
+      }
+    },
+
+    "user_live_eu": {
+      "name": "User (prod EU)",
+      "description": "Production EU user identifier (prefix taxonomy demo)",
+      "owner_team": "identity-platform",
+      "pii": true,
+      "retention": "7y",
+      "policies": {
+        "cross_region": { "allowed": false, "reason": "EU PII must not leave EU" }
+      },
+      "links": {
+        "logs": "https://logs.company/search?q={id}&region=eu",
+        "admin": "https://admin.company/eu/users/{id}"
+      }
+    }
+  }
+}
