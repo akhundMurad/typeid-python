@@ -1,0 +1,10 @@
+# Valid
+user_01h45ytscbebyvny4gc8cr8ma2
+order_01h2xcejqtf2nbrexx3vqjhp41
+
+# Unknown prefix (still valid TypeID)
+mystery_01h2xcejqtf2nbrexx3vqjhp41
+
+# Invalid
+user_NOT_A_SUFFIX
+not_a_typeid
