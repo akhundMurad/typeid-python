@@ -8,26 +8,27 @@ from typeid import base32
 from typeid.errors import InvalidTypeIDStringException
 from typeid.validation import validate_prefix, validate_suffix
 
-PrefixT = TypeVar("PrefixT", bound=Optional[str])
+PrefixT = TypeVar("PrefixT", bound=str)
 
 
 class TypeID(Generic[PrefixT]):
-    def __init__(self, prefix: PrefixT = None, suffix: Optional[str] = None) -> None:
+    def __init__(self, prefix: Optional[PrefixT] = None, suffix: Optional[str] = None) -> None:
         suffix = _convert_uuid_to_b32(uuid6.uuid7()) if not suffix else suffix
         validate_suffix(suffix=suffix)
+
         if prefix is not None:
             validate_prefix(prefix=prefix)
 
-        self._prefix = prefix or ""
-        self._suffix = suffix
+        self._prefix: Optional[PrefixT] = prefix
+        self._suffix: str = suffix
 
     @classmethod
-    def from_string(cls, string: str):
+    def from_string(cls, string: str) -> "TypeID":
         prefix, suffix = get_prefix_and_suffix(string=string)
         return cls(suffix=suffix, prefix=prefix)
 
     @classmethod
-    def from_uuid(cls, suffix: uuid.UUID, prefix: Optional[str] = None):
+    def from_uuid(cls, suffix: uuid.UUID, prefix: Optional[PrefixT] = None) -> "TypeID":
         suffix_str = _convert_uuid_to_b32(suffix)
         return cls(suffix=suffix_str, prefix=prefix)
 
@@ -37,7 +38,7 @@ class TypeID(Generic[PrefixT]):
 
     @property
     def prefix(self) -> str:
-        return self._prefix
+        return self._prefix or ""
 
     @property
     def uuid(self) -> uuid6.UUID:
