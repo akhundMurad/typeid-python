@@ -1,6 +1,6 @@
 import uuid
 import warnings
-from typing import Optional
+from typing import Generic, Optional, TypeVar
 
 import uuid6
 
@@ -8,12 +8,14 @@ from typeid import base32
 from typeid.errors import InvalidTypeIDStringException
 from typeid.validation import validate_prefix, validate_suffix
 
+PrefixT = TypeVar("PrefixT", bound=Optional[str])
 
-class TypeID:
-    def __init__(self, prefix: Optional[str] = None, suffix: Optional[str] = None) -> None:
+
+class TypeID(Generic[PrefixT]):
+    def __init__(self, prefix: PrefixT = None, suffix: Optional[str] = None) -> None:
         suffix = _convert_uuid_to_b32(uuid6.uuid7()) if not suffix else suffix
         validate_suffix(suffix=suffix)
-        if prefix:
+        if prefix is not None:
             validate_prefix(prefix=prefix)
 
         self._prefix = prefix or ""
