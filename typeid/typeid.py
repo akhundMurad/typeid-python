@@ -1,3 +1,4 @@
+from datetime import datetime, timezone
 import uuid
 import warnings
 from typing import Generic, Optional, TypeVar
@@ -145,6 +146,35 @@ class TypeID(Generic[PrefixT]):
         """
         return _convert_b32_to_uuid(self.suffix)
 
+    @property
+    def created_at(self) -> Optional[datetime]:
+        """
+        Creation time embedded in the underlying UUID, if available.
+
+        TypeID typically uses UUIDv7 for generated IDs. UUIDv7 encodes the Unix
+        timestamp (milliseconds) in the most significant 48 bits of the 128-bit UUID.
+
+        Returns:
+            A timezone-aware UTC datetime if the underlying UUID is version 7,
+            otherwise None.
+        """
+        u = self.uuid  # must be LOSSLESS: constructed as UUID(bytes=decoded_bytes)
+
+        # Only UUIDv7 has a defined "created_at" in this sense.
+        try:
+            if getattr(u, "version", None) != 7:
+                return None
+        except Exception:
+            return None
+
+        try:
+            # UUID is 128 bits; top 48 bits are unix epoch time in milliseconds.
+            # So: unix_ms = uuid_int >> (128 - 48) = uuid_int >> 80
+            unix_ms = int(u.int) >> 80
+            return datetime.fromtimestamp(unix_ms / 1000.0, tz=timezone.utc)
+        except Exception:
+            return None
+
     def __str__(self) -> str:
         """
         Render the TypeID into its canonical string representation.
@@ -243,4 +273,4 @@ def _convert_uuid_to_b32(uuid_instance: uuid.UUID) -> str:
 def _convert_b32_to_uuid(b32: str) -> uuid6.UUID:
     uuid_bytes = bytes(base32.decode(b32))
     uuid_int = int.from_bytes(uuid_bytes, byteorder="big")
-    return uuid6.UUID(int=uuid_int, version=7)
+    return uuid6.UUID(int=uuid_int)

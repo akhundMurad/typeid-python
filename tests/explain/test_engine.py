@@ -177,3 +177,11 @@ def test_to_dict_is_json_serializable():
 
     payload = exp.to_dict()
     json.dumps(payload)  # should not raise
+
+
+def test_explain_nil_uuid_not_sortable_no_created_at():
+    exp = explain("x_00000000000000000000000000", enable_schema=False)
+    assert exp.valid is True
+    assert exp.parsed.uuid == "00000000-0000-0000-0000-000000000000"
+    assert exp.parsed.created_at is None
+    assert exp.parsed.sortable is False
