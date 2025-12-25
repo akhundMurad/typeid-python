@@ -145,7 +145,7 @@ class TypeID(Generic[PrefixT]):
             - The UUID type here follows `uuid6.UUID` used by the project.
         """
         return _convert_b32_to_uuid(self.suffix)
-    
+
     @property
     def created_at(self) -> Optional[datetime]:
         """

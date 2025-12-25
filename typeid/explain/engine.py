@@ -130,7 +130,7 @@ def _parse_typeid(id_str: str) -> ParsedTypeID:
     # Derived facts from the validated TypeID
     uuid_obj = tid.uuid  # library returns a UUID object (uuid6.UUID)
     uuid_str = str(uuid_obj)
-    
+
     ver = _uuid_version(uuid_obj)
 
     created_at = _uuid7_created_at(uuid_obj) if ver == 7 else None
