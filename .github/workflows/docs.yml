@@ -26,4 +26,4 @@ jobs:
           uv sync --locked --all-groups
 
       - name: Deploy
-        run: mkdocs gh-deploy --force
+        run: uv run mkdocs gh-deploy --force
