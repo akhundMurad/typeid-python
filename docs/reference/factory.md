@@ -1,0 +1,3 @@
+# Factory
+
+::: typeid.factory
