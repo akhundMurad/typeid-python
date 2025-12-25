@@ -10,6 +10,7 @@ from typeid.explain.engine import explain as explain_engine
 from typeid.explain.formatters import format_explanation_json, format_explanation_pretty
 from typeid.explain.registry import load_registry, make_lookup
 
+
 @click.group()
 def cli():
     # Root CLI command group.
@@ -66,7 +67,6 @@ def decode(encoded: str) -> None:
 
     click.echo(f"type: {prefix}")
     click.echo(f"uuid: {uuid}")
-
 
 
 @cli.command()
