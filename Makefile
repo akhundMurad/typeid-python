@@ -38,3 +38,16 @@ release:
 
 test:
 	uv run pytest -v
+
+
+test-docs:
+	uv run pytest README.md docs/ --markdown-docs
+
+
+docs:
+	mkdocs serve
+
+
+docs-build: 
+	mkdocs build
+

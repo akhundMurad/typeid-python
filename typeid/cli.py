@@ -13,12 +13,20 @@ from typeid.explain.registry import load_registry, make_lookup
 
 @click.group()
 def cli():
+    # Root CLI command group.
+    # This acts as the entry point for all subcommands.
     pass
 
 
 @cli.command()
 @click.option("-p", "--prefix")
 def new(prefix: Optional[str] = None) -> None:
+    """
+    Generate a new TypeID.
+
+    If a prefix is provided, it will be validated and included in the output.
+    If no prefix is provided, a prefix-less TypeID is generated.
+    """
     typeid = TypeID(prefix=prefix)
     click.echo(str(typeid))
 
@@ -27,16 +35,36 @@ def new(prefix: Optional[str] = None) -> None:
 @click.argument("uuid")
 @click.option("-p", "--prefix")
 def encode(uuid: str, prefix: Optional[str] = None) -> None:
-    typeid = from_uuid(suffix=UUID(uuid), prefix=prefix)
+    """
+    Encode an existing UUID into a TypeID.
+
+    This command is intended for cases where UUIDs already exist
+    (e.g. stored in a database) and need to be represented as TypeIDs.
+    """
+    uuid_obj = UUID(uuid)
+    typeid = from_uuid(suffix=uuid_obj, prefix=prefix)
+
     click.echo(str(typeid))
 
 
 @cli.command()
 @click.argument("encoded")
 def decode(encoded: str) -> None:
+    """
+    Decode a TypeID into its components.
+
+    This extracts:
+    - the prefix (if any)
+    - the underlying UUID
+
+    This command is primarily intended for inspection and debugging.
+    """
+
     prefix, suffix = get_prefix_and_suffix(encoded)
     decoded_bytes = bytes(base32.decode(suffix))
+
     uuid = UUID(bytes=decoded_bytes)
+
     click.echo(f"type: {prefix}")
     click.echo(f"uuid: {uuid}")
 

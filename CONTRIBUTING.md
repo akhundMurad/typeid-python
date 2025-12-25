@@ -18,7 +18,7 @@ Thank you for taking the time to contribute ❤️
 2. Clone your fork locally:
 
 ```bash
-git clone https://github.com/<your-username>/typeid-python.git
+git clone https://github.com/akhundMurad/typeid-python.git
 cd typeid-python
 ```
 

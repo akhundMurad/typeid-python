@@ -1,0 +1,51 @@
+site_name: TypeID
+site_description: Explainable, prefix-based identifiers for Python
+
+repo_name: akhundMurad/typeid-python
+repo_url: https://github.com/akhundMurad/typeid-python
+
+theme:
+  name: material
+  language: en
+  features:
+    - navigation.tabs
+    - navigation.top
+    - content.code.copy
+    - search.highlight
+    - search.share
+  icon:
+    repo: fontawesome/brands/github
+
+plugins:
+  - search
+  - git-revision-date-localized
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            docstring_style: google
+            show_source: false
+            show_signature_annotations: true
+            merge_init_into_class: true
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.tabbed:
+      alternate_style: true
+
+nav:
+  - Index: index.md
+  - Quickstart: quickstart.md
+  - Reference:
+      - TypeID: reference/typeid.md
+      - Explain: reference/explain.md
+      - CLI: reference/cli.md
+      - Factory: reference/factory.md
+  - Concepts: concepts.md
+  - Explain: explain.md
+  - Contributing: contributing.md

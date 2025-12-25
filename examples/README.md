@@ -18,8 +18,6 @@ These examples demonstrate how to:
 * safely handle invalid or unknown IDs
 * generate machine-readable reports
 
-📄 See **`examples/explain/README.md`** for full documentation and usage instructions.
-
 ## `examples/sqlalchemy.py` — SQLAlchemy integration
 
 This example demonstrates how to use **TypeID with SQLAlchemy** in a clean and

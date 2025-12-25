@@ -64,15 +64,18 @@ If the extra is not installed, JSON schemas will still work.
     ```python
     from typeid import TypeID
 
+    # Default TypeID (no prefix)
     typeid = TypeID()
 
-    print(typeid.prefix)  # ""
-    print(typeid.suffix)  # "01h45ytscbebyvny4gc8cr8ma2" (encoded uuid7 instance)
+    assert typeid.prefix == ""
+    assert isinstance(typeid.suffix, str)
+    assert len(typeid.suffix) > 0  # encoded UUIDv7
 
+    # TypeID with prefix
     typeid = TypeID(prefix="user")
 
-    print(typeid.prefix)  # "user"
-    print(str(typeid))  # "user_01h45ytscbebyvny4gc8cr8ma2"
+    assert typeid.prefix == "user"
+    assert str(typeid).startswith("user_")
     ```
 
 - Create TypeID from string:
@@ -80,9 +83,11 @@ If the extra is not installed, JSON schemas will still work.
     ```python
     from typeid import TypeID
 
-    typeid = TypeID.from_string("user_01h45ytscbebyvny4gc8cr8ma2")
+    value = "user_01h45ytscbebyvny4gc8cr8ma2"
+    typeid = TypeID.from_string(value)
 
-    print(str(typeid))  # "user_01h45ytscbebyvny4gc8cr8ma2"
+    assert str(typeid) == value
+    assert typeid.prefix == "user"
     ```
 
 - Create TypeID from uuid7:
@@ -91,12 +96,37 @@ If the extra is not installed, JSON schemas will still work.
     from typeid import TypeID
     from uuid6 import uuid7
 
-    uuid = uuid7()  # UUID('01890bf0-846f-7762-8605-5a3abb40e0e5')
+    uuid = uuid7()
     prefix = "user"
 
     typeid = TypeID.from_uuid(prefix=prefix, suffix=uuid)
 
-    print(str(typeid))  # "user_01h45z113fexh8c1at7axm1r75"
+    assert typeid.prefix == prefix
+    assert str(typeid).startswith(f"{prefix}_")
+
+    ```
+
+- Use pre-defined prefix:
+
+    ```python
+    from dataclasses import dataclass, field
+    from typing import Literal
+    from typeid import TypeID, typeid_factory
+
+    UserID = TypeID[Literal["user"]]
+    gen_user_id = typeid_factory("user")
+
+
+    @dataclass
+    class UserDTO:
+        user_id: UserID = field(default_factory=gen_user_id)
+        full_name: str = "A J"
+        age: int = 18
+
+
+    user = UserDTO()
+
+    assert str(user.user_id).startswith("user_")
     ```
 
 ### CLI-tool
