@@ -1,3 +1,5 @@
+from datetime import datetime, timezone
+from uuid import UUID
 import pytest
 import uuid6
 
@@ -142,3 +144,61 @@ def test_uuid_property() -> None:
     assert isinstance(typeid.uuid, uuid6.UUID)
     assert typeid.uuid.version == uuid.version == 7
     assert typeid.uuid.time == uuid.time
+
+
+def test_created_at_none_for_nil_uuid_suffix():
+    tid = TypeID(prefix="x", suffix="00000000000000000000000000")
+    assert tid.created_at is None
+
+
+def test_created_at_none_for_non_v7_uuid_v4():
+    # UUIDv4 (random) must not claim created_at
+    u = UUID("550e8400-e29b-41d4-a716-446655440000")  # version 4
+    tid = TypeID.from_uuid(u, prefix="x")
+    assert tid.created_at is None
+
+
+def test_created_at_is_utc_for_uuid7_generated_typeid():
+    # Default TypeID generation should be UUIDv7; then created_at must be present and UTC
+    tid = TypeID(prefix="x")
+    dt = tid.created_at
+    assert dt is not None
+    _assert_utc_datetime(dt)
+
+
+def test_created_at_monotonic_increasing_for_multiple_new_ids():
+    # UUIDv7 embeds time; created_at should be non-decreasing across consecutive generations.
+    # Note: UUIDv7 can generate multiple IDs within the same millisecond, so equality is allowed.
+    t1 = TypeID(prefix="x").created_at
+    t2 = TypeID(prefix="x").created_at
+    t3 = TypeID(prefix="x").created_at
+
+    assert t1 is not None and t2 is not None and t3 is not None
+    assert t1 <= t2 <= t3
+
+
+def test_created_at_does_not_crash_if_uuid_object_is_unexpected(monkeypatch):
+    # If TypeID.uuid returns something odd that breaks version/int access,
+    # created_at should return None (safe behavior).
+    class WeirdUUID:
+        @property
+        def version(self):
+            raise RuntimeError("nope")
+
+        @property
+        def int(self):
+            raise RuntimeError("nope")
+
+    tid = TypeID(prefix="x", suffix="00000000000000000000000000")
+
+    # monkeypatch instance attribute/property access
+    monkeypatch.setattr(type(tid), "uuid", property(lambda self: WeirdUUID()))
+
+    assert tid.created_at is None
+
+
+def _assert_utc_datetime(dt: datetime) -> None:
+    assert isinstance(dt, datetime)
+    assert dt.tzinfo is timezone.utc
+    # must be timezone-aware and normalized to UTC
+    assert dt.utcoffset() == timezone.utc.utcoffset(dt)
