@@ -1,4 +1,4 @@
-name: Build
+name: Run Tests
 
 on:
   release:
@@ -7,14 +7,13 @@ on:
     branches:
       - main
     paths-ignore:
-      - README.md
-      - CHANGELOG.md
+      - *.md
 
 env:
   PROJECT_NAME: typeid-python
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
