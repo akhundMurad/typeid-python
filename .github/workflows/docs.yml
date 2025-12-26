@@ -1,16 +1,22 @@
-name: Docs
+name: Publish Docs
 
 on:
   push:
-    branches: [main]
+    tags:
+      - "v*"
   workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
+  test:
+    uses: ./.github/workflows/test.yml
+
   deploy:
     runs-on: ubuntu-latest
+    needs: test
+
     steps:
       - uses: actions/checkout@v4
 
