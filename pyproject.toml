@@ -52,6 +52,7 @@ dev = [
     "mkdocs-literate-nav>=0.6.2",
     "mkdocs-section-index>=0.3.10",
     "pytest-markdown-docs>=0.9.0",
+    "pytest-benchmark>=5.0.1",
 ]
 
 [tool.hatch.build.targets.sdist]
