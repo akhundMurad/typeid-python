@@ -209,6 +209,8 @@ Then:
 $ typeid explain user_01h45ytscbebyvny4gc8cr8ma2
 ```
 
+Read more here: ["Docs: Explain"](https://akhundmurad.github.io/typeid-python/performance/).
+
 ## Design principles
 
 * **Non-breaking**: stable APIs

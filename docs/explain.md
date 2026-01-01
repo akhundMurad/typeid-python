@@ -39,6 +39,130 @@ If parsing fails, the explanation still succeeds — it simply reports that the 
 
 This distinction is important. `explain` is not a validator that throws errors; it is an inspection tool that always returns an answer.
 
+## Usage
+
+```console
+$ typeid explain user_01h45ytscbebyvny4gc8cr8ma2
+```
+
+Example output:
+
+```yaml
+id: user_01h45ytscbebyvny4gc8cr8ma2
+valid: true
+
+parsed:
+  prefix: user
+  suffix: 01h45ytscbebyvny4gc8cr8ma2
+  uuid: 01890bf0-846f-7762-8605-5a3abb40e0e5
+  created_at: 2025-03-12T10:41:23Z
+  sortable: true
+
+schema:
+  found: false
+```
+
+Even without configuration, `typeid explain` can:
+
+* validate the ID
+* extract the UUID
+* derive creation time (UUIDv7)
+* determine sortability
+
+### Schema-based explanations
+
+To make explanations richer, you can define a **TypeID schema** describing what each
+prefix represents.
+
+#### Example schema (`typeid.schema.json`)
+
+```json
+{
+  "schema_version": 1,
+  "types": {
+    "user": {
+      "name": "User",
+      "description": "End-user account",
+      "owner_team": "identity-platform",
+      "pii": true,
+      "retention": "7y",
+      "links": {
+        "logs": "https://logs.company/search?q={id}",
+        "trace": "https://traces.company/?id={id}"
+      }
+    }
+  }
+}
+```
+
+#### Explain using schema
+
+```console
+$ typeid explain user_01h45ytscbebyvny4gc8cr8ma2
+```
+
+Output (excerpt):
+
+```yaml
+schema:
+  found: true
+  name: User
+  owner_team: identity-platform
+  pii: true
+  retention: 7y
+
+links:
+  logs: https://logs.company/search?q=user_01h45ytscbebyvny4gc8cr8ma2
+```
+
+#### Schema discovery rules
+
+If `--schema` is not provided, TypeID looks for a schema in the following order:
+
+1. Environment variable:
+
+   ```console
+   TYPEID_SCHEMA=/path/to/schema.json
+   ```
+2. Current directory:
+
+   * `typeid.schema.json`
+   * `typeid.schema.yaml`
+3. User config directory:
+
+   * `~/.config/typeid/schema.json`
+   * `~/.config/typeid/schema.yaml`
+
+If no schema is found, the command still works with derived information only.
+
+#### YAML schemas (optional)
+
+YAML schemas are supported if the optional dependency is installed:
+
+```console
+pip install typeid-python[yaml]
+```
+
+Example (`typeid.schema.yaml`):
+
+```yaml
+schema_version: 1
+types:
+  user:
+    name: User
+    owner_team: identity-platform
+    links:
+      logs: "https://logs.company/search?q={id}"
+```
+
+### JSON output (machine-readable)
+
+```console
+$ typeid explain user_01h45ytscbebyvny4gc8cr8ma2 --json
+```
+
+Useful for: scripts, CI pipelines, IDE integrations
+
 ## Invalid vs unknown
 
 An invalid identifier is one that cannot be parsed at all. Its structure is wrong, its encoding is broken, or it does not conform to the TypeID format.
@@ -152,9 +276,3 @@ A useful way to think about `typeid explain` is:
 > **OpenAPI, but for identifiers instead of HTTP endpoints**
 
 It provides a shared, inspectable contract for something that is otherwise opaque and informal.
-
-## Closing
-
-Identifiers are part of a system’s interface, whether we acknowledge it or not.
-
-By making identifiers inspectable and explainable, TypeID aims to reduce friction in debugging, improve communication across teams, and make systems slightly easier to reason about — without sacrificing compatibility or safety.
