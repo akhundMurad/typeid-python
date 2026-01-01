@@ -197,10 +197,17 @@ class TypeID(Generic[PrefixT]):
     @property
     def uuid_bytes(self) -> bytes:
         """
-        Bytes of the represented UUID.
+        Raw bytes of the underlying UUID.
+
+        This returns the canonical 16-byte representation of the UUID encoded
+        in this TypeID. The value is derived lazily from the suffix and cached
+        on first access.
+
+        This property is backend-agnostic and independent of the concrete
+        UUID implementation used internally.
 
         Returns:
-            The bytes value of UUID.
+            A 16-byte ``bytes`` object representing the UUID.
         """
         if self._uuid_bytes is None:
             self._uuid_bytes = base32.decode(self._suffix)
@@ -208,12 +215,39 @@ class TypeID(Generic[PrefixT]):
 
     @property
     def timestamp_ms(self) -> int:
+        """
+        Creation timestamp encoded in the TypeID (milliseconds since Unix epoch).
+
+        TypeID identifiers are based on UUIDv7, which encodes the creation time
+        in the first 48 bits of the UUID as a Unix timestamp in milliseconds.
+
+        This value is extracted directly from the identifier and does **not**
+        depend on any UUID backend or runtime-specific behavior.
+
+        Returns:
+            The creation time as an integer number of milliseconds since
+            ``1970-01-01T00:00:00Z``.
+        """
         if self._uuid_bytes is None:
             self._uuid_bytes = base32.decode(self._suffix)
         return _extract_v7_timestamp_ms(self._uuid_bytes)
 
     @property
     def creation_time(self) -> datetime:
+        """
+        Creation time of the TypeID as a timezone-aware UTC datetime.
+
+        This is a convenience wrapper around :pyattr:`timestamp_ms` that converts
+        the embedded UUIDv7 timestamp into a ``datetime`` object in UTC.
+
+        The returned value is:
+        - timezone-aware
+        - stable across Python versions
+        - independent of UUID backend semantics
+
+        Returns:
+            A ``datetime`` instance representing the creation time in UTC.
+        """
         return datetime.fromtimestamp(
             self.timestamp_ms / 1000,
             tz=timezone.utc,
