@@ -61,7 +61,7 @@ Benchmarks are:
 * committed as raw JSON
 * runnable locally via `bench/`
 
-See [`bench/README.md`](bench/README.md) for details.
+See [`Docs: Performance`](https://akhundmurad.github.io/typeid-python/performance/) for details.
 
 ## Installation
 
