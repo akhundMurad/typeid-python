@@ -1,20 +1,20 @@
-name: Publish to PyPI
+name: Publish to TestPyPI
 
 on:
-  push:
-    tags:
-      - "v*"
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: "Git ref to build (tag like v0.3.4-rc1, branch, or SHA). Default: current ref."
+        required: false
+        default: ""
 
 permissions:
   contents: read
   id-token: write
 
 jobs:
-  test:
-    uses: ./.github/workflows/test.yml
-  
-  docs:
-    uses: ./.github/workflows/docs.yml
+  pr:
+    uses: ./.github/workflows/pr.yml
 
   build-wheels:
     runs-on: ${{ matrix.os }}
@@ -111,7 +111,8 @@ jobs:
           find dist -type f \( -name "*.whl" -o -name "*.tar.gz" \) -maxdepth 4 -print -exec cp {} out/ \;
           ls -la out
 
-      - name: Publish to PyPI
+      - name: Publish to TestPyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
+          repository-url: https://test.pypi.org/legacy/
           packages-dir: out

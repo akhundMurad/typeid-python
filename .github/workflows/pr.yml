@@ -1,4 +1,4 @@
-name: PR
+name: PR Tests
 
 on:
   pull_request:
@@ -55,3 +55,7 @@ jobs:
       - name: Run doc tests
         run: |
           make test-docs
+  
+  test-rust-accel:
+    uses: ./.github/workflows/test-rust-accel.yml
+
