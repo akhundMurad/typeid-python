@@ -36,10 +36,11 @@ jobs:
           uv sync --locked --all-groups --all-extras
 
       - name: Build & install Rust extension (maturin develop)
-        run: |
-          cd rust-base32
-          uv run maturin develop --release
-          cd ..
+        uses: PyO3/maturin-action@v1
+        with:
+          command: develop
+          args: --release
+          working-directory: rust-base32
 
       - name: Sanity check (import extension)
         run: |
