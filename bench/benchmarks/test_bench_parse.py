@@ -11,6 +11,11 @@ def test_typeid_parse(benchmark):
     benchmark(TypeID.from_string, TYPEID_STR)
 
 
+def test_typeid_parse_reuse(benchmark):
+    s = str(TypeID("user"))
+    benchmark(lambda: TypeID.from_string(s))
+
+
 def test_uuid6_parse(benchmark):
     benchmark(uuid6.UUID, UUID_STR)
 

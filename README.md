@@ -13,199 +13,154 @@
     <img src="https://img.shields.io/pypi/pyversions/typeid-python.svg?color=red&labelColor=black" alt="Supported Python versions">
 </a>
 
-## A Python implementation of [TypeIDs](https://github.com/jetpack-io/typeid) using Python
+## TypeID for Python
 
-TypeIDs are a modern, **type-safe**, globally unique identifier based on the upcoming
-UUIDv7 standard. They provide a ton of nice properties that make them a great choice
-as the primary identifiers for your data in a database, APIs, and distributed systems.
-Read more about TypeIDs in their [spec](https://github.com/jetpack-io/typeid).
+A **high-performance Python implementation of [TypeIDs](https://github.com/jetpack-io/typeid)** — type-safe,
+sortable identifiers based on **UUIDv7**.
 
-This particular implementation provides an pip package that can be used by any Python project.
+TypeIDs are designed for modern systems where identifiers should be:
+
+- globally unique
+- sortable by creation time
+- safe to expose externally
+- easy to reason about in logs, APIs, and databases
+
+This library provides a Python package with optional Rust acceleration.
+
+## Key features
+
+- ✅ UUIDv7-based, time-sortable identifiers
+- ✅ Type-safe prefixes (`user_`, `order_`, …)
+- ✅ Human-readable and URL-safe
+- ✅ Fast generation & parsing (Rust-accelerated)
+- ✅ CLI tools (`new`, `encode`, `decode`, `explain`)
+- ✅ Schema-based ID explanations (JSON / YAML)
+- ✅ Fully offline, no external services
 
 ## Installation
 
-- Pip:
-
-    ```console
-    pip install typeid-python
-    ```
-
-- Uv:
-
-    ```console
-    uv add typeid-python
-    ```
-
-- Poetry:
-
-    ```console
-    poetry add typeid-python
-    ```
-
-### Optional dependencies
-
-TypeID supports schema-based ID explanations using JSON (always available) and
-YAML (optional).
-
-To enable YAML support:
+### Core (pure Python)
 
 ```console
-pip install typeid-python[yaml]
+$ pip install typeid-python
 ```
 
-If the extra is not installed, JSON schemas will still work.
+### With Rust acceleration (recommended)
+
+```console
+$ pip install typeid-python[rust]
+```
+
+This enables:
+
+* Rust base32 encode/decode
+* `uuid-utils` for fast UUIDv7 generation
+
+If Rust is unavailable, TypeID automatically falls back to the pure-Python implementation.
+
+### Other optional extras
+
+```console
+$ pip install typeid-python[yaml]   # YAML schema support
+$ pip install typeid-python[cli]    # CLI tools
+```
+
+Extras are **strictly optional**.
 
 ## Usage
 
 ### Basic
 
-- Create TypeID Instance:
+```python
+from typeid import TypeID
 
-    ```python
-    from typeid import TypeID
+tid = TypeID(prefix="user")
 
-    # Default TypeID (no prefix)
-    typeid = TypeID()
+assert tid.prefix == "user"
+assert isinstance(tid.suffix, str)
+assert str(tid).startswith("user_")
+```
 
-    assert typeid.prefix == ""
-    assert isinstance(typeid.suffix, str)
-    assert len(typeid.suffix) > 0  # encoded UUIDv7
+### From string
 
-    # TypeID with prefix
-    typeid = TypeID(prefix="user")
+```python
+tid = TypeID.from_string("user_01h45ytscbebyvny4gc8cr8ma2")
+assert tid.prefix == "user"
+```
 
-    assert typeid.prefix == "user"
-    assert str(typeid).startswith("user_")
-    ```
+### From UUIDv7
 
-- Create TypeID from string:
+```python
+from typeid import TypeID
+from uuid6 import uuid7
 
-    ```python
-    from typeid import TypeID
+u = uuid7()
+tid = TypeID.from_uuid(prefix="user", suffix=u)
 
-    value = "user_01h45ytscbebyvny4gc8cr8ma2"
-    typeid = TypeID.from_string(value)
+assert tid.uuid.version == 7
+```
 
-    assert str(typeid) == value
-    assert typeid.prefix == "user"
-    ```
+### Typed prefixes
 
-- Create TypeID from uuid7:
+```python
+from typing import Literal
+from typeid import TypeID, typeid_factory
 
-    ```python
-    from typeid import TypeID
-    from uuid6 import uuid7
+UserID = TypeID[Literal["user"]]
+gen_user_id = typeid_factory("user")
 
-    uuid = uuid7()
-    prefix = "user"
+user_id = gen_user_id()
+```
 
-    typeid = TypeID.from_uuid(prefix=prefix, suffix=uuid)
+## CLI
 
-    assert typeid.prefix == prefix
-    assert str(typeid).startswith(f"{prefix}_")
+```console
+$ pip install typeid-python[cli]
+```
 
-    ```
+Generate:
 
-- Use pre-defined prefix:
+```console
+$ typeid new -p user
+user_01h2xcejqtf2nbrexx3vqjhp41
+```
 
-    ```python
-    from dataclasses import dataclass, field
-    from typing import Literal
-    from typeid import TypeID, typeid_factory
+Decode:
 
-    UserID = TypeID[Literal["user"]]
-    gen_user_id = typeid_factory("user")
+```console
+$ typeid decode user_01h2xcejqtf2nbrexx3vqjhp41
+uuid: 0188bac7-4afa-78aa-bc3b-bd1eef28d881
+```
 
+Encode:
 
-    @dataclass
-    class UserDTO:
-        user_id: UserID = field(default_factory=gen_user_id)
-        full_name: str = "A J"
-        age: int = 18
+```console
+$ typeid encode 0188bac7-4afa-78aa-bc3b-bd1eef28d881 --prefix user
+```
 
-
-    user = UserDTO()
-
-    assert str(user.user_id).startswith("user_")
-    ```
-
-### CLI-tool
-
-- Install dependencies:
-
-    ```console
-    pip install typeid-python[cli]
-    ```
-
-- To generate a new TypeID, run:
-
-    ```console
-    $ typeid new -p prefix
-    prefix_01h2xcejqtf2nbrexx3vqjhp41
-    ```
-
-- To decode an existing TypeID into a UUID run:
-
-    ```console
-    $ typeid decode prefix_01h2xcejqtf2nbrexx3vqjhp41
-    type: prefix
-    uuid: 0188bac7-4afa-78aa-bc3b-bd1eef28d881
-    ```
-
-- And to encode an existing UUID into a TypeID run:
-
-    ```console
-    $ typeid encode 0188bac7-4afa-78aa-bc3b-bd1eef28d881 --prefix prefix
-    prefix_01h2xcejqtf2nbrexx3vqjhp41
-    ```
-
-## ✨ NEW: `typeid explain` — “What is this ID?”
-
-TypeID can now **explain a TypeID** in a human-readable way.
-
-This is useful when:
-
-* debugging logs
-* inspecting database records
-* reviewing production incidents
-* understanding IDs shared via Slack, tickets, or dashboards
-
-### Basic usage (no schema required)
+## ✨ `typeid explain` — understand any ID
 
 ```console
 $ typeid explain user_01h45ytscbebyvny4gc8cr8ma2
 ```
 
-Example output:
+Outputs:
 
 ```yaml
-id: user_01h45ytscbebyvny4gc8cr8ma2
-valid: true
-
 parsed:
   prefix: user
-  suffix: 01h45ytscbebyvny4gc8cr8ma2
   uuid: 01890bf0-846f-7762-8605-5a3abb40e0e5
   created_at: 2025-03-12T10:41:23Z
   sortable: true
-
-schema:
-  found: false
 ```
 
-Even without configuration, `typeid explain` can:
-
-* validate the ID
-* extract the UUID
-* derive creation time (UUIDv7)
-* determine sortability
+Works **without schema**, fully offline.
 
 ## Schema-based explanations
 
-To make explanations richer, you can define a **TypeID schema** describing what each
-prefix represents.
+Define meaning for prefixes using JSON or YAML.
 
-### Example schema (`typeid.schema.json`)
+Example (`typeid.schema.json`):
 
 ```json
 {
@@ -213,103 +168,56 @@ prefix represents.
   "types": {
     "user": {
       "name": "User",
-      "description": "End-user account",
       "owner_team": "identity-platform",
-      "pii": true,
-      "retention": "7y",
-      "links": {
-        "logs": "https://logs.company/search?q={id}",
-        "trace": "https://traces.company/?id={id}"
-      }
+      "pii": true
     }
   }
 }
 ```
 
-### Explain using schema
+Then:
 
 ```console
 $ typeid explain user_01h45ytscbebyvny4gc8cr8ma2
 ```
 
-Output (excerpt):
+## Performance
 
-```yaml
-schema:
-  found: true
-  name: User
-  owner_team: identity-platform
-  pii: true
-  retention: 7y
+TypeID is optimized for **real-world performance**, not just correctness.
 
-links:
-  logs: https://logs.company/search?q=user_01h45ytscbebyvny4gc8cr8ma2
-```
+### Benchmark summary (mean time)
 
-## Schema discovery rules
+| Operation | Before Rust | Rust + optimizations |
+| --------- | ----------- | -------------------- |
+| Generate  | 3.47 µs     | **0.70 µs**          |
+| Parse     | 2.08 µs     | **1.30 µs**          |
+| Workflow  | 5.52 µs     | **2.25 µs**          |
 
-If `--schema` is not provided, TypeID looks for a schema in the following order:
+### Highlights
 
-1. Environment variable:
+* 🚀 **~5× faster generation**
+* ⚡ **~1.6× faster parsing**
+* 🔁 **~2.5× faster end-to-end workflows**
 
-   ```console
-   TYPEID_SCHEMA=/path/to/schema.json
-   ```
-2. Current directory:
+Benchmarks are:
 
-   * `typeid.schema.json`
-   * `typeid.schema.yaml`
-3. User config directory:
+* reproducible
+* committed as raw JSON
+* runnable locally via `bench/`
 
-   * `~/.config/typeid/schema.json`
-   * `~/.config/typeid/schema.yaml`
-
-If no schema is found, the command still works with derived information only.
-
-## YAML schemas (optional)
-
-YAML schemas are supported if the optional dependency is installed:
-
-```console
-pip install typeid-python[yaml]
-```
-
-Example (`typeid.schema.yaml`):
-
-```yaml
-schema_version: 1
-types:
-  user:
-    name: User
-    owner_team: identity-platform
-    links:
-      logs: "https://logs.company/search?q={id}"
-```
-
-## JSON output (machine-readable)
-
-```console
-$ typeid explain user_01h45ytscbebyvny4gc8cr8ma2 --json
-```
-
-Useful for:
-
-* scripts
-* CI pipelines
-* IDE integrations
+See [`bench/README.md`](bench/README.md) for details.
 
 ## Design principles
 
-* **Non-breaking**: existing APIs and CLI commands remain unchanged
-* **Schema-optional**: works fully offline
-* **Read-only**: no side effects or external mutations
-* **Declarative**: meaning is defined by users, not inferred by the tool
+* **Non-breaking**: stable APIs
+* **Optional acceleration**: Rust is opt-in
+* **Lazy evaluation**: work is done only when needed
+* **Explainability**: identifiers carry meaning
+* **Transparency**: performance claims are backed by data
 
-You can think of `typeid explain` as:
-
-> **OpenAPI — but for identifiers instead of HTTP endpoints**
+> Think of TypeID as
+> **UUIDs + semantics + observability — without sacrificing speed**
 
 ## License
 
 MIT
-

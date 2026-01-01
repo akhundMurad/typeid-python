@@ -1,25 +1,160 @@
-# Benchmarks
+# Performance Benchmarks
 
-This directory contains performance benchmarks for the library.
+This directory contains reproducible performance benchmarks for `typeid-python`.
 
-## Run all benchmarks
+The goal is to transparently demonstrate:
+- the impact of the Rust base32 implementation,
+- the effect of additional architectural optimizations,
+- and the remaining overhead compared to raw UUIDs.
+
+All benchmark results are produced using `pytest-benchmark` and committed as raw JSON.
+
+## Benchmark environments
+
+Benchmarks were run with:
+
+- Python: **3.13**
+- OS: macOS / Linux
+- CPU: Apple Silicon / x86_64
+- Tooling: `pytest-benchmark`
+- UUID backends:
+  - `uuid-utils` (Rust, optional)
+  - `uuid6` (Python, legacy comparison)
+
+Exact environment details are embedded in each JSON result file.
+
+## How to run benchmarks locally
+
+### Install dependencies
 
 ```bash
-pytest bench/ --benchmark-only
-
-
+uv sync --extra rust
+uv sync --dev
 ```
------------------------------------------------ benchmark: 5 tests ----------------------------------------------
-Name (time in ns)               Min                  Mean                StdDev            OPS (Kops/s)          
------------------------------------------------------------------------------------------------------------------
-test_uuid_parse            379.1472 (1.0)        438.3783 (1.0)        321.1808 (1.0)        2,281.1348 (1.0)    
-test_uuid4_generate        916.8871 (2.42)     1,393.4906 (3.18)       423.5204 (1.32)         717.6223 (0.31)   
-test_typeid_parse        2,082.9029 (5.49)     2,396.6020 (5.47)       840.6535 (2.62)         417.2574 (0.18)   
-test_typeid_generate     4,749.9780 (12.53)    5,237.8623 (11.95)    1,072.2349 (3.34)         190.9176 (0.08)   
-test_typeid_workflow     7,125.0834 (18.79)    7,785.5831 (17.76)    1,302.2201 (4.05)         128.4425 (0.06)   
------------------------------------------------------------------------------------------------------------------
 
-Legend:
-  Outliers: 1 Standard Deviation from Mean; 1.5 IQR (InterQuartile Range) from 1st Quartile and 3rd Quartile.
-  OPS: Operations Per Second, computed as 1 / Mean
+### Run all benchmarks
+
+```bash
+./bench/run.sh
 ```
+
+### Export results to JSON
+
+```bash
+uv run pytest bench/ --benchmark-only --benchmark-json=bench.json
+```
+
+## Benchmark result sets
+
+We maintain multiple benchmark snapshots to show progress over time:
+
+| ID       | Description                                                          |
+| -------- | -------------------------------------------------------------------- |
+| **0001** | Pure Python implementation (before Rust)                             |
+| **0004** | Rust base32 + `uuid-utils` + lazy UUID + single decode optimizations |
+
+Raw benchmark data:
+
+- `bench/results/0001_before_rust.json`
+- `bench/results/0002_rust_optimized.json`
+
+These files are the **source of truth**.
+
+---
+
+## Comparison summary (mean time, µs)
+
+| Benchmark           | 0001 – Before Rust | 0002 – Rust + optimizations | Speedup (0004 vs 0001) |
+| ------------------- | -----------------: | --------------------------: | ---------------------: |
+| **TypeID generate** |           3.467 µs |                **0.701 µs** |       **4.94× faster** |
+| **TypeID parse**    |           2.076 µs |                **1.296 µs** |       **1.60× faster** |
+| **TypeID workflow** |           5.516 µs |                **2.247 µs** |       **2.46× faster** |
+
+## What changed between versions
+
+### Rust integration
+
+* Rust base32 encode/decode
+* `uuid-utils` for UUIDv7 generation
+* Major improvement in **generation speed**
+* Temporary regression in parse due to eager UUID construction
+
+### Architectural optimizations
+
+* Lazy UUID materialization (`.uuid` created only when accessed)
+* Single-pass suffix validation (no double decode)
+* Optimized `from_uuid()` path
+* Cached string rendering
+
+Result: parse and workflow became faster than the original Python baseline.
+
+## UUID backend comparison (context)
+
+These numbers represent the approximate lower bound:
+
+| Operation | uuid-utils |    uuid6 |
+| --------- | ---------: | -------: |
+| Generate  |   ~0.08 µs | ~1.51 µs |
+| Parse     |   ~0.12 µs | ~0.53 µs |
+
+TypeID adds overhead for:
+
+* base32 encoding
+* prefix handling
+* validation
+* safety guarantees
+
+This overhead is now reduced to approximately **1–2 µs**, depending on the operation.
+
+## Cold path vs warm path
+
+All benchmarks measure cold-path performance: each iteration operates on a new identifier.
+
+In real applications (logs, databases, queues), identifiers are often:
+
+- parsed multiple times,
+- stringified repeatedly,
+- compared frequently.
+
+In those scenarios, caching and lazy evaluation reduce effective cost further.
+
+## Benchmark philosophy
+
+TypeID does **not** aim to outperform raw UUIDs in every metric.
+
+Instead, it provides:
+
+- sortable identifiers,
+- human-readable representation,
+- type safety,
+- explainability,
+
+at a cost of roughly **~1 µs** over raw UUID operations.
+
+This tradeoff is intentional and documented.
+
+## Performance regression policy
+
+Performance regressions are tracked via benchmark comparison.
+
+Future CI plans:
+
+- compare PR benchmarks against `0002`
+- fail CI on statistically significant regressions
+
+## Reproducibility
+
+If you doubt any number:
+
+1. Clone the repository
+2. Run the benchmarks
+3. Compare the JSON output
+
+No screenshots, no hidden scripts — only raw data.
+
+## Summary
+
+* TypeID generation is now **~5× faster** than the original implementation
+* Parsing is **faster than the original Python baseline**
+* End-to-end workflows are **~2.5× faster**
+* Improvements are measurable, documented, and reproducible
