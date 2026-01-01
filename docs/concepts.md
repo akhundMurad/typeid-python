@@ -96,6 +96,17 @@ Unknown identifiers are first-class citizens. They allow systems to evolve indep
 
 This distinction is essential for forward compatibility and safe tooling.
 
+## Performance as a design constraint
+
+Explainability and structure are only useful if identifiers remain cheap to generate and process.
+
+This implementation treats performance as a first-class concern:
+- generation and parsing are optimized
+- work is done lazily where possible
+- optional native code is used for hot paths
+
+The goal is not to beat raw UUIDs, but to remain close enough that TypeIDs can be used everywhere UUIDs are used today.
+
 ## A note on safety
 
 TypeID is deliberately conservative.

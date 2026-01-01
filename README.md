@@ -37,6 +37,32 @@ This library provides a Python package with optional Rust acceleration.
 - ✅ Schema-based ID explanations (JSON / YAML)
 - ✅ Fully offline, no external services
 
+## Performance
+
+TypeID is optimized for **real-world performance**, not just correctness.
+
+### Benchmark summary (mean time)
+
+| Operation | Before Rust | Rust + optimizations |
+| --------- | ----------- | -------------------- |
+| Generate  | 3.47 µs     | **0.70 µs**          |
+| Parse     | 2.08 µs     | **1.30 µs**          |
+| Workflow  | 5.52 µs     | **2.25 µs**          |
+
+### Highlights
+
+* 🚀 **~5× faster generation**
+* ⚡ **~1.6× faster parsing**
+* 🔁 **~2.5× faster end-to-end workflows**
+
+Benchmarks are:
+
+* reproducible
+* committed as raw JSON
+* runnable locally via `bench/`
+
+See [`bench/README.md`](bench/README.md) for details.
+
 ## Installation
 
 ### Core (pure Python)
@@ -182,32 +208,6 @@ Then:
 ```console
 $ typeid explain user_01h45ytscbebyvny4gc8cr8ma2
 ```
-
-## Performance
-
-TypeID is optimized for **real-world performance**, not just correctness.
-
-### Benchmark summary (mean time)
-
-| Operation | Before Rust | Rust + optimizations |
-| --------- | ----------- | -------------------- |
-| Generate  | 3.47 µs     | **0.70 µs**          |
-| Parse     | 2.08 µs     | **1.30 µs**          |
-| Workflow  | 5.52 µs     | **2.25 µs**          |
-
-### Highlights
-
-* 🚀 **~5× faster generation**
-* ⚡ **~1.6× faster parsing**
-* 🔁 **~2.5× faster end-to-end workflows**
-
-Benchmarks are:
-
-* reproducible
-* committed as raw JSON
-* runnable locally via `bench/`
-
-See [`bench/README.md`](bench/README.md) for details.
 
 ## Design principles
 

@@ -1,4 +1,4 @@
-use pyo3::exceptions::PyValueError;
+use pyo3::exceptions::PyRuntimeError;
 use pyo3::prelude::*;
 use pyo3::types::PyModule;
 
@@ -25,7 +25,7 @@ fn build_table() -> [u8; 256] {
 #[pyfunction]
 fn encode(src: &[u8]) -> PyResult<String> {
     if src.len() != UUID_LEN {
-        return Err(PyValueError::new_err("Invalid length (expected 16 bytes)."));
+        return Err(PyRuntimeError::new_err("Invalid length (expected 16 bytes)."));
     }
     let b = src;
 
@@ -68,7 +68,7 @@ fn encode(src: &[u8]) -> PyResult<String> {
 #[pyfunction]
 fn decode(s: &str) -> PyResult<Vec<u8>> {
     if s.len() != SUFFIX_LEN {
-        return Err(PyValueError::new_err("Invalid length (expected 26 chars)."));
+        return Err(PyRuntimeError::new_err("Invalid length (expected 26 chars)."));
     }
 
     let t = build_table();
@@ -77,7 +77,7 @@ fn decode(s: &str) -> PyResult<Vec<u8>> {
     // Validate
     for &ch in bytes {
         if t[ch as usize] == 0xFF {
-            return Err(PyValueError::new_err("Invalid base32 character."));
+            return Err(PyRuntimeError::new_err("Invalid base32 character."));
         }
     }
 
