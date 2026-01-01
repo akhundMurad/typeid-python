@@ -1,6 +1,6 @@
 # Performance Benchmarks
 
-This directory contains reproducible performance benchmarks for `typeid-python`.
+This `./bench` directory contains reproducible performance benchmarks for `typeid-python`.
 
 The goal is to transparently demonstrate:
 - the impact of the Rust base32 implementation,
@@ -51,7 +51,7 @@ We maintain multiple benchmark snapshots to show progress over time:
 | ID       | Description                                                          |
 | -------- | -------------------------------------------------------------------- |
 | **0001** | Pure Python implementation (before Rust)                             |
-| **0004** | Rust base32 + `uuid-utils` + lazy UUID + single decode optimizations |
+| **0002** | Rust base32 + `uuid-utils` + lazy UUID + single decode optimizations |
 
 Raw benchmark data:
 
