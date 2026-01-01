@@ -14,14 +14,6 @@ _backend = get_uuid_backend()
 PrefixT = TypeVar("PrefixT", bound=str)
 
 
-def _extract_v7_timestamp_ms(uuid_bytes: bytes) -> int:
-    """
-    Extract Unix timestamp (ms) from UUIDv7 bytes.
-    UUIDv7: first 48 bits = Unix timestamp in ms.
-    """
-    return int.from_bytes(uuid_bytes[0:6], byteorder="big")
-
-
 def _uuid_from_bytes_v7(uuid_bytes: bytes) -> std_uuid.UUID:
     """
     Construct a UUID object from bytes.
@@ -31,7 +23,6 @@ def _uuid_from_bytes_v7(uuid_bytes: bytes) -> std_uuid.UUID:
         import uuid6  # type: ignore
 
         uuid_int = int.from_bytes(uuid_bytes, "big")
-        # uuid6.UUID(int=..., version=7) would be ideal; uuid6 also infers in many cases.
         return uuid6.UUID(int=uuid_int)
     except Exception:
         return std_uuid.UUID(bytes=uuid_bytes)
@@ -214,44 +205,33 @@ class TypeID(Generic[PrefixT]):
         return self._uuid_bytes
 
     @property
-    def timestamp_ms(self) -> int:
+    def created_at(self) -> Optional[datetime]:
         """
-        Creation timestamp encoded in the TypeID (milliseconds since Unix epoch).
+        Creation time embedded in the underlying UUID, if available.
 
-        TypeID identifiers are based on UUIDv7, which encodes the creation time
-        in the first 48 bits of the UUID as a Unix timestamp in milliseconds.
-
-        This value is extracted directly from the identifier and does **not**
-        depend on any UUID backend or runtime-specific behavior.
+        TypeID typically uses UUIDv7 for generated IDs. UUIDv7 encodes the Unix
+        timestamp (milliseconds) in the most significant 48 bits of the 128-bit UUID.
 
         Returns:
-            The creation time as an integer number of milliseconds since
-            ``1970-01-01T00:00:00Z``.
+            A timezone-aware UTC datetime if the underlying UUID is version 7,
+            otherwise None.
         """
-        if self._uuid_bytes is None:
-            self._uuid_bytes = base32.decode(self._suffix)
-        return _extract_v7_timestamp_ms(self._uuid_bytes)
+        u = self.uuid
 
-    @property
-    def creation_time(self) -> datetime:
-        """
-        Creation time of the TypeID as a timezone-aware UTC datetime.
+        # Only UUIDv7 has a defined "created_at" in this sense.
+        try:
+            if getattr(u, "version", None) != 7:
+                return None
+        except Exception:
+            return None
 
-        This is a convenience wrapper around :pyattr:`timestamp_ms` that converts
-        the embedded UUIDv7 timestamp into a ``datetime`` object in UTC.
-
-        The returned value is:
-        - timezone-aware
-        - stable across Python versions
-        - independent of UUID backend semantics
-
-        Returns:
-            A ``datetime`` instance representing the creation time in UTC.
-        """
-        return datetime.fromtimestamp(
-            self.timestamp_ms / 1000,
-            tz=timezone.utc,
-        )
+        try:
+            # UUID is 128 bits; top 48 bits are unix epoch time in milliseconds.
+            # So: unix_ms = uuid_int >> (128 - 48) = uuid_int >> 80
+            unix_ms = int(u.int) >> 80
+            return datetime.fromtimestamp(unix_ms / 1000.0, tz=timezone.utc)
+        except Exception:
+            return None
 
     def __str__(self) -> str:
         """

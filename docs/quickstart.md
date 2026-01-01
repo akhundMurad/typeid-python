@@ -126,7 +126,7 @@ tid.uuid
 
 > **_NOTE:_**
 > The exact Python type returned by `tid.uuid` depends on the available backend.
-> For time-related information, prefer `typeid explain` or derived properties (`.creation_time` and `.timestamp_ms`)
+> For time-related information, prefer `typeid explain` or derived properties (`.created_at`)
 > over backend-specific UUID attributes.
 
 And you can always reconstruct a TypeID from a UUID:

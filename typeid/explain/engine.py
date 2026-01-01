@@ -130,9 +130,11 @@ def _parse_typeid(id_str: str) -> ParsedTypeID:
     # Derived facts from the validated TypeID
     uuid_obj = tid.uuid  # library returns a UUID object (uuid6.UUID)
     uuid_str = str(uuid_obj)
+    
+    ver = _uuid_version(uuid_obj)
 
-    created_at = _uuid7_created_at(uuid_obj)
-    sortable = True  # UUIDv7 is time-ordered by design
+    created_at = _uuid7_created_at(uuid_obj) if ver == 7 else None
+    sortable = True if ver == 7 else False
 
     return ParsedTypeID(
         raw=id_str,
@@ -245,3 +247,11 @@ def _apply_derived_provenance(exp: Explanation) -> None:
         exp.provenance.setdefault("created_at", Provenance.DERIVED_FROM_ID)
     if exp.parsed.sortable is not None:
         exp.provenance.setdefault("sortable", Provenance.DERIVED_FROM_ID)
+
+
+def _uuid_version(u: Any) -> Optional[int]:
+    try:
+        # uuid.UUID and uuid6.UUID both usually expose .version
+        return int(u.version)
+    except Exception:
+        return None

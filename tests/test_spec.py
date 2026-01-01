@@ -18,3 +18,4 @@ def test_valid_spec(valid_spec: list) -> None:
 
         typeid = TypeID.from_uuid(prefix=prefix, suffix=uuid)
         assert str(typeid) == spec["typeid"]
+        assert typeid.uuid == uuid
