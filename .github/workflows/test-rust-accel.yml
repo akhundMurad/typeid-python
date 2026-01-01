@@ -33,12 +33,10 @@ jobs:
 
       - name: Sync deps (locked)
         run: |
-          uv sync --locked --all-groups
+          uv sync --locked --all-groups --all-extras
 
       - name: Build & install Rust extension (maturin develop)
         run: |
-          uv run python -m pip install -U pip
-          uv run python -m pip install -U maturin
           cd rust-base32
           uv run maturin develop --release
           cd ..
