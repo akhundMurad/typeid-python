@@ -1,3 +1,4 @@
+from datetime import datetime, timezone
 import warnings
 from typing import Generic, Optional, TypeVar
 
@@ -11,6 +12,14 @@ from typeid._uuid_backend import get_uuid_backend
 _backend = get_uuid_backend()
 
 PrefixT = TypeVar("PrefixT", bound=str)
+
+
+def _extract_v7_timestamp_ms(uuid_bytes: bytes) -> int:
+    """
+    Extract Unix timestamp (ms) from UUIDv7 bytes.
+    UUIDv7: first 48 bits = Unix timestamp in ms.
+    """
+    return int.from_bytes(uuid_bytes[0:6], byteorder="big")
 
 
 def _uuid_from_bytes_v7(uuid_bytes: bytes) -> std_uuid.UUID:
@@ -183,6 +192,31 @@ class TypeID(Generic[PrefixT]):
             assert self._uuid_bytes is not None
             self._uuid = _uuid_from_bytes_v7(self._uuid_bytes)
         return self._uuid
+    
+    @property
+    def uuid_bytes(self) -> bytes:
+        """
+        Bytes of the represented UUID.
+
+        Returns:
+            The bytes value of UUID.
+        """
+        if self._uuid_bytes is None:
+            self._uuid_bytes = base32.decode(self._suffix)
+        return self._uuid_bytes
+    
+    @property
+    def timestamp_ms(self) -> int:
+        if self._uuid_bytes is None:
+            self._uuid_bytes = base32.decode(self._suffix)
+        return _extract_v7_timestamp_ms(self._uuid_bytes)
+
+    @property
+    def creation_time(self) -> datetime:
+        return datetime.fromtimestamp(
+            self.timestamp_ms / 1000,
+            tz=timezone.utc,
+        )
 
     def __str__(self) -> str:
         """
