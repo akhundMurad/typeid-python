@@ -2,7 +2,6 @@ from datetime import datetime, timezone
 from typing import Callable
 import pytest
 import uuid6
-import uuid as std_uuid
 
 from typeid import TypeID
 from typeid.errors import SuffixValidationException

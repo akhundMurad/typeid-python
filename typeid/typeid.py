@@ -29,6 +29,7 @@ def _uuid_from_bytes_v7(uuid_bytes: bytes) -> std_uuid.UUID:
     """
     try:
         import uuid6  # type: ignore
+
         uuid_int = int.from_bytes(uuid_bytes, "big")
         # uuid6.UUID(int=..., version=7) would be ideal; uuid6 also infers in many cases.
         return uuid6.UUID(int=uuid_int)
@@ -58,7 +59,7 @@ class TypeID(Generic[PrefixT]):
     Type parameters:
         PrefixT: a type-level constraint for the prefix (often `str` or a Literal).
     """
-    
+
     __slots__ = ("_prefix", "_suffix", "_uuid_bytes", "_uuid", "_str")
 
     def __init__(self, prefix: Optional[PrefixT] = None, suffix: Optional[str] = None) -> None:
@@ -192,7 +193,7 @@ class TypeID(Generic[PrefixT]):
             assert self._uuid_bytes is not None
             self._uuid = _uuid_from_bytes_v7(self._uuid_bytes)
         return self._uuid
-    
+
     @property
     def uuid_bytes(self) -> bytes:
         """
@@ -204,7 +205,7 @@ class TypeID(Generic[PrefixT]):
         if self._uuid_bytes is None:
             self._uuid_bytes = base32.decode(self._suffix)
         return self._uuid_bytes
-    
+
     @property
     def timestamp_ms(self) -> int:
         if self._uuid_bytes is None:

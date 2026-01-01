@@ -1,14 +1,15 @@
-import os
-
 import pytest
 
 from typeid._uuid_backend import get_uuid_backend
 
 
-@pytest.mark.parametrize("value,expected", [
-    ("uuid6", "uuid6"),
-    ("uuid-utils", "uuid-utils"),
-])
+@pytest.mark.parametrize(
+    "value,expected",
+    [
+        ("uuid6", "uuid6"),
+        ("uuid-utils", "uuid-utils"),
+    ],
+)
 def test_backend_forced(monkeypatch, value, expected):
     monkeypatch.setenv("TYPEID_UUID_BACKEND", value)
     backend = get_uuid_backend()
