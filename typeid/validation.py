@@ -1,4 +1,3 @@
-# typeid/validation.py
 import re
 
 from typeid import base32
@@ -31,7 +30,6 @@ def validate_suffix_and_decode(suffix: str) -> bytes:
     except Exception as exc:
         raise SuffixValidationException(f"Invalid suffix: {suffix}.") from exc
 
-    # If your decoder always returns 16 bytes, this is optional, but cheap sanity:
     if len(uuid_bytes) != 16:
         raise SuffixValidationException(f"Invalid suffix: {suffix}.")
     return uuid_bytes

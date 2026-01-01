@@ -84,6 +84,8 @@ assert str(tid).startswith("user_")
 ### From string
 
 ```python
+from typeid import TypeID
+
 tid = TypeID.from_string("user_01h45ytscbebyvny4gc8cr8ma2")
 assert tid.prefix == "user"
 ```
