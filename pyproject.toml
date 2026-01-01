@@ -27,10 +27,7 @@ dependencies = ["uuid6>=2024.7.10,<2026.0.0"]
 [project.optional-dependencies]
 cli = ["click"]
 yaml = ["PyYAML"]
-rust = [
-  "uuid-utils>=0.12.0",
-  "maturin>=1.5; platform_system != 'Windows'",  # optional; for local dev only
-]
+rust = ["uuid-utils>=0.12.0"]
 
 [project.urls]
 Homepage = "https://github.com/akhundMurad/typeid-python"
@@ -57,6 +54,7 @@ dev = [
     "mkdocs-section-index>=0.3.10",
     "pytest-markdown-docs>=0.9.0",
     "pytest-benchmark>=5.0.1",
+    "maturin>=1.5; platform_system != 'Windows'"
 ]
 
 [tool.hatch.build.targets.sdist]

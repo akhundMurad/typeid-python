@@ -1310,7 +1310,6 @@ cli = [
     { name = "click" },
 ]
 rust = [
-    { name = "maturin", marker = "sys_platform != 'win32'" },
     { name = "uuid-utils" },
 ]
 yaml = [
@@ -1320,6 +1319,7 @@ yaml = [
 [package.dev-dependencies]
 dev = [
     { name = "black" },
+    { name = "maturin", marker = "sys_platform != 'win32'" },
     { name = "mkdocs-gen-files" },
     { name = "mkdocs-git-revision-date-localized-plugin" },
     { name = "mkdocs-literate-nav" },
@@ -1339,7 +1339,6 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "click", marker = "extra == 'cli'" },
-    { name = "maturin", marker = "sys_platform != 'win32' and extra == 'rust'", specifier = ">=1.5" },
     { name = "pyyaml", marker = "extra == 'yaml'" },
     { name = "uuid-utils", marker = "extra == 'rust'", specifier = ">=0.12.0" },
     { name = "uuid6", specifier = ">=2024.7.10,<2026.0.0" },
@@ -1349,6 +1348,7 @@ provides-extras = ["cli", "yaml", "rust"]
 [package.metadata.requires-dev]
 dev = [
     { name = "black", specifier = ">=23.3.0,<24" },
+    { name = "maturin", marker = "sys_platform != 'win32'", specifier = ">=1.5" },
     { name = "mkdocs-gen-files", specifier = ">=0.6.0" },
     { name = "mkdocs-git-revision-date-localized-plugin", specifier = ">=1.5.0" },
     { name = "mkdocs-literate-nav", specifier = ">=0.6.2" },

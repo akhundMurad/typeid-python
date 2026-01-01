@@ -10,23 +10,29 @@ It is intentionally short. The goal is to get you productive quickly, not to exp
 
 Install the package using your preferred tool.
 
-With pip:
+- Standard installation (uses `uuid6` library):
 
-```bash
-pip install typeid-python
-```
+    ```console
+    $ pip install typeid-python
+    ```
 
-With uv:
+- Rust acceleration (`uuid-utils` + Rust base32 encode/decode):
 
-```bash
-uv add typeid-python
-```
+    ```console
+    $ pip install "typeid-python[rust]"
+    ```
 
-If you plan to use YAML schemas later, install the optional extra:
+- YAML schemas support:
 
-```bash
-pip install "typeid-python[yaml]"
-```
+    ```console
+    $ pip install "typeid-python[yaml]"
+    ```
+
+- CLI features:
+
+    ```console
+    $ pip install "typeid-python[cli]"
+    ```
 
 JSON schemas work without any extras.
 
