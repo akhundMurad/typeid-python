@@ -196,7 +196,6 @@ def _decode_py(s: str) -> bytes:
     v = s.encode("utf-8")
     tbl = TABLE
 
-    # ✅ FIX: fail if ANY character is invalid (not only if ALL are invalid)
     for b in v:
         if tbl[b] == 0xFF:
             raise RuntimeError("Invalid base32 character")

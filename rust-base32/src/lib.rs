@@ -13,12 +13,7 @@ fn build_table() -> [u8; 256] {
     for (i, &ch) in ALPHABET.iter().enumerate() {
         t[ch as usize] = i as u8;
     }
-    // Optional: accept uppercase forms (harmless; remove if you want strict lowercase)
-    // for (i, &ch) in ALPHABET.iter().enumerate() {
-    //     if ch.is_ascii_lowercase() {
-    //         t[ch.to_ascii_uppercase() as usize] = i as u8;
-    //     }
-    // }
+
     t
 }
 
