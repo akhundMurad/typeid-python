@@ -41,6 +41,7 @@ markdown_extensions:
 nav:
   - Index: index.md
   - Quickstart: quickstart.md
+  - Performance: performance.md
   - Reference:
       - TypeID: reference/typeid.md
       - Explain: reference/explain.md

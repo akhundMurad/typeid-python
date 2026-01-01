@@ -1,10 +1,18 @@
-from typing import List
+try:
+    from typeid_base32 import encode as _encode_rust, decode as _decode_rust  # type: ignore
 
+    _HAS_RUST = True
+except Exception:
+    _HAS_RUST = False
+    _encode_rust = None
+    _decode_rust = None
+
+from typing import Union
 from typeid.constants import SUFFIX_LEN
 
 ALPHABET = "0123456789abcdefghjkmnpqrstvwxyz"
 
-
+# TABLE maps ASCII byte -> 0..31 or 0xFF if invalid
 TABLE = [
     0xFF,
     0xFF,
@@ -134,229 +142,96 @@ TABLE = [
     0xFF,
     0xFF,
     0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-]
+] + [0xFF] * (256 - 128)
 
 
-def encode(src: List[int]) -> str:
-    dst = [""] * SUFFIX_LEN
+BytesLike = Union[bytes, bytearray, memoryview]
 
-    if len(src) != 16:
+
+def _encode_py(src: BytesLike) -> str:
+    mv = memoryview(src)
+    if mv.nbytes != 16:
         raise RuntimeError("Invalid length.")
 
-    # 10 byte timestamp
-    dst[0] = ALPHABET[(src[0] & 224) >> 5]
-    dst[1] = ALPHABET[src[0] & 31]
-    dst[2] = ALPHABET[(src[1] & 248) >> 3]
-    dst[3] = ALPHABET[((src[1] & 7) << 2) | ((src[2] & 192) >> 6)]
-    dst[4] = ALPHABET[(src[2] & 62) >> 1]
-    dst[5] = ALPHABET[((src[2] & 1) << 4) | ((src[3] & 240) >> 4)]
-    dst[6] = ALPHABET[((src[3] & 15) << 1) | ((src[4] & 128) >> 7)]
-    dst[7] = ALPHABET[(src[4] & 124) >> 2]
-    dst[8] = ALPHABET[((src[4] & 3) << 3) | ((src[5] & 224) >> 5)]
-    dst[9] = ALPHABET[src[5] & 31]
+    # Pre-allocate output chars
+    dst = [""] * SUFFIX_LEN
 
-    # 16 bytes of randomness
-    dst[10] = ALPHABET[(src[6] & 248) >> 3]
-    dst[11] = ALPHABET[((src[6] & 7) << 2) | ((src[7] & 192) >> 6)]
-    dst[12] = ALPHABET[(src[7] & 62) >> 1]
-    dst[13] = ALPHABET[((src[7] & 1) << 4) | ((src[8] & 240) >> 4)]
-    dst[14] = ALPHABET[((src[8] & 15) << 1) | ((src[9] & 128) >> 7)]
-    dst[15] = ALPHABET[(src[9] & 124) >> 2]
-    dst[16] = ALPHABET[((src[9] & 3) << 3) | ((src[10] & 224) >> 5)]
-    dst[17] = ALPHABET[src[10] & 31]
-    dst[18] = ALPHABET[(src[11] & 248) >> 3]
-    dst[19] = ALPHABET[((src[11] & 7) << 2) | ((src[12] & 192) >> 6)]
-    dst[20] = ALPHABET[(src[12] & 62) >> 1]
-    dst[21] = ALPHABET[((src[12] & 1) << 4) | ((src[13] & 240) >> 4)]
-    dst[22] = ALPHABET[((src[13] & 15) << 1) | ((src[14] & 128) >> 7)]
-    dst[23] = ALPHABET[(src[14] & 124) >> 2]
-    dst[24] = ALPHABET[((src[14] & 3) << 3) | ((src[15] & 224) >> 5)]
-    dst[25] = ALPHABET[src[15] & 31]
+    # Timestamp (6 bytes => 10 chars)
+    dst[0] = ALPHABET[(mv[0] & 0b11100000) >> 5]
+    dst[1] = ALPHABET[mv[0] & 0b00011111]
+    dst[2] = ALPHABET[(mv[1] & 0b11111000) >> 3]
+    dst[3] = ALPHABET[((mv[1] & 0b00000111) << 2) | ((mv[2] & 0b11000000) >> 6)]
+    dst[4] = ALPHABET[(mv[2] & 0b00111110) >> 1]
+    dst[5] = ALPHABET[((mv[2] & 0b00000001) << 4) | ((mv[3] & 0b11110000) >> 4)]
+    dst[6] = ALPHABET[((mv[3] & 0b00001111) << 1) | ((mv[4] & 0b10000000) >> 7)]
+    dst[7] = ALPHABET[(mv[4] & 0b01111100) >> 2]
+    dst[8] = ALPHABET[((mv[4] & 0b00000011) << 3) | ((mv[5] & 0b11100000) >> 5)]
+    dst[9] = ALPHABET[mv[5] & 0b00011111]
+
+    # Entropy (10 bytes => 16 chars)
+    dst[10] = ALPHABET[(mv[6] & 0b11111000) >> 3]
+    dst[11] = ALPHABET[((mv[6] & 0b00000111) << 2) | ((mv[7] & 0b11000000) >> 6)]
+    dst[12] = ALPHABET[(mv[7] & 0b00111110) >> 1]
+    dst[13] = ALPHABET[((mv[7] & 0b00000001) << 4) | ((mv[8] & 0b11110000) >> 4)]
+    dst[14] = ALPHABET[((mv[8] & 0b00001111) << 1) | ((mv[9] & 0b10000000) >> 7)]
+    dst[15] = ALPHABET[(mv[9] & 0b01111100) >> 2]
+    dst[16] = ALPHABET[((mv[9] & 0b00000011) << 3) | ((mv[10] & 0b11100000) >> 5)]
+    dst[17] = ALPHABET[mv[10] & 0b00011111]
+    dst[18] = ALPHABET[(mv[11] & 0b11111000) >> 3]
+    dst[19] = ALPHABET[((mv[11] & 0b00000111) << 2) | ((mv[12] & 0b11000000) >> 6)]
+    dst[20] = ALPHABET[(mv[12] & 0b00111110) >> 1]
+    dst[21] = ALPHABET[((mv[12] & 0b00000001) << 4) | ((mv[13] & 0b11110000) >> 4)]
+    dst[22] = ALPHABET[((mv[13] & 0b00001111) << 1) | ((mv[14] & 0b10000000) >> 7)]
+    dst[23] = ALPHABET[(mv[14] & 0b01111100) >> 2]
+    dst[24] = ALPHABET[((mv[14] & 0b00000011) << 3) | ((mv[15] & 0b11100000) >> 5)]
+    dst[25] = ALPHABET[mv[15] & 0b00011111]
 
     return "".join(dst)
 
 
-def decode(s: str) -> List[int]:
-    v = bytes(s, encoding="utf-8")
+def _decode_py(s: str) -> bytes:
+    if len(s) != SUFFIX_LEN:
+        raise RuntimeError("Invalid length.")
 
-    if (
-        TABLE[v[0]] == 0xFF
-        and TABLE[v[1]] == 0xFF
-        and TABLE[v[2]] == 0xFF
-        and TABLE[v[3]] == 0xFF
-        and TABLE[v[4]] == 0xFF
-        and TABLE[v[5]] == 0xFF
-        and TABLE[v[6]] == 0xFF
-        and TABLE[v[7]] == 0xFF
-        and TABLE[v[8]] == 0xFF
-        and TABLE[v[9]] == 0xFF
-        and TABLE[v[10]] == 0xFF
-        and TABLE[v[11]] == 0xFF
-        and TABLE[v[12]] == 0xFF
-        and TABLE[v[13]] == 0xFF
-        and TABLE[v[14]] == 0xFF
-        and TABLE[v[15]] == 0xFF
-        and TABLE[v[16]] == 0xFF
-        and TABLE[v[17]] == 0xFF
-        and TABLE[v[18]] == 0xFF
-        and TABLE[v[19]] == 0xFF
-        and TABLE[v[20]] == 0xFF
-        and TABLE[v[21]] == 0xFF
-        and TABLE[v[22]] == 0xFF
-        and TABLE[v[23]] == 0xFF
-        and TABLE[v[24]] == 0xFF
-        and TABLE[v[25]] == 0xFF
-    ):
-        raise RuntimeError("Invalid base32 character")
+    v = s.encode("utf-8")
+    tbl = TABLE
 
-    typeid = [0] * 16
+    for b in v:
+        if tbl[b] == 0xFF:
+            raise RuntimeError("Invalid base32 character")
+
+    out = bytearray(16)
 
     # 6 bytes timestamp (48 bits)
-    typeid[0] = (TABLE[v[0]] << 5) | TABLE[v[1]]
-    typeid[1] = (TABLE[v[2]] << 3) | (TABLE[v[3]] >> 2)
-    typeid[2] = ((TABLE[v[3]] & 3) << 6) | (TABLE[v[4]] << 1) | (TABLE[v[5]] >> 4)
-    typeid[3] = ((TABLE[v[5]] & 15) << 4) | (TABLE[v[6]] >> 1)
-    typeid[4] = ((TABLE[v[6]] & 1) << 7) | (TABLE[v[7]] << 2) | (TABLE[v[8]] >> 3)
-    typeid[5] = ((TABLE[v[8]] & 7) << 5) | TABLE[v[9]]
+    out[0] = (tbl[v[0]] << 5) | tbl[v[1]]
+    out[1] = (tbl[v[2]] << 3) | (tbl[v[3]] >> 2)
+    out[2] = ((tbl[v[3]] & 3) << 6) | (tbl[v[4]] << 1) | (tbl[v[5]] >> 4)
+    out[3] = ((tbl[v[5]] & 15) << 4) | (tbl[v[6]] >> 1)
+    out[4] = ((tbl[v[6]] & 1) << 7) | (tbl[v[7]] << 2) | (tbl[v[8]] >> 3)
+    out[5] = ((tbl[v[8]] & 7) << 5) | tbl[v[9]]
 
-    # 10 bytes of entropy (80 bits)
-    typeid[6] = (TABLE[v[10]] << 3) | (TABLE[v[11]] >> 2)
-    typeid[7] = ((TABLE[v[11]] & 3) << 6) | (TABLE[v[12]] << 1) | (TABLE[v[13]] >> 4)
-    typeid[8] = ((TABLE[v[13]] & 15) << 4) | (TABLE[v[14]] >> 1)
-    typeid[9] = ((TABLE[v[14]] & 1) << 7) | (TABLE[v[15]] << 2) | (TABLE[v[16]] >> 3)
-    typeid[10] = ((TABLE[v[16]] & 7) << 5) | TABLE[v[17]]
-    typeid[11] = (TABLE[v[18]] << 3) | (TABLE[v[19]] >> 2)
-    typeid[12] = ((TABLE[v[19]] & 3) << 6) | (TABLE[v[20]] << 1) | (TABLE[v[21]] >> 4)
-    typeid[13] = ((TABLE[v[21]] & 15) << 4) | (TABLE[v[22]] >> 1)
-    typeid[14] = ((TABLE[v[22]] & 1) << 7) | (TABLE[v[23]] << 2) | (TABLE[v[24]] >> 3)
-    typeid[15] = ((TABLE[v[24]] & 7) << 5) | TABLE[v[25]]
+    # 10 bytes entropy (80 bits)
+    out[6] = (tbl[v[10]] << 3) | (tbl[v[11]] >> 2)
+    out[7] = ((tbl[v[11]] & 3) << 6) | (tbl[v[12]] << 1) | (tbl[v[13]] >> 4)
+    out[8] = ((tbl[v[13]] & 15) << 4) | (tbl[v[14]] >> 1)
+    out[9] = ((tbl[v[14]] & 1) << 7) | (tbl[v[15]] << 2) | (tbl[v[16]] >> 3)
+    out[10] = ((tbl[v[16]] & 7) << 5) | tbl[v[17]]
+    out[11] = (tbl[v[18]] << 3) | (tbl[v[19]] >> 2)
+    out[12] = ((tbl[v[19]] & 3) << 6) | (tbl[v[20]] << 1) | (tbl[v[21]] >> 4)
+    out[13] = ((tbl[v[21]] & 15) << 4) | (tbl[v[22]] >> 1)
+    out[14] = ((tbl[v[22]] & 1) << 7) | (tbl[v[23]] << 2) | (tbl[v[24]] >> 3)
+    out[15] = ((tbl[v[24]] & 7) << 5) | tbl[v[25]]
 
-    return typeid
+    return bytes(out)
+
+
+def encode(src: bytes) -> str:
+    if _HAS_RUST:
+        return _encode_rust(src)
+    return _encode_py(src)
+
+
+def decode(s: str) -> bytes:
+    if _HAS_RUST:
+        return _decode_rust(s)
+    return _decode_py(s)

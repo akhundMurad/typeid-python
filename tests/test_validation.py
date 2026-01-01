@@ -3,7 +3,7 @@ from uuid6 import uuid7
 
 from typeid import base32
 from typeid.errors import PrefixValidationException, SuffixValidationException
-from typeid.validation import validate_prefix, validate_suffix
+from typeid.validation import validate_prefix, validate_suffix_and_decode
 
 
 def test_validate_correct_prefix() -> None:
@@ -46,10 +46,10 @@ def test_validate_not_ascii_prefix() -> None:
 
 
 def test_validate_correct_suffix() -> None:
-    suffix = base32.encode(list(uuid7().bytes))
+    suffix = base32.encode(uuid7().bytes)
 
     try:
-        validate_suffix(suffix)
+        validate_suffix_and_decode(suffix)
     except SuffixValidationException as exc:
         pytest.fail(str(exc))
 
@@ -58,4 +58,4 @@ def test_validate_wrong_suffix() -> None:
     suffix = "asd"
 
     with pytest.raises(SuffixValidationException):
-        validate_suffix(suffix)
+        validate_suffix_and_decode(suffix)
