@@ -12,15 +12,13 @@ def validate_prefix(prefix: str) -> None:
 
 
 def validate_suffix(suffix: str) -> None:
-    if (
-        len(suffix) != SUFFIX_LEN
-        or suffix == ""
-        or " " in suffix
-        or (not suffix.isdigit() and not suffix.islower())
-        or any([symbol not in base32.ALPHABET for symbol in suffix])
-        or suffix[0] > "7"
-    ):
+    if len(suffix) != SUFFIX_LEN or not suffix:
         raise SuffixValidationException(f"Invalid suffix: {suffix}.")
+    if " " in suffix:
+        raise SuffixValidationException(f"Invalid suffix: {suffix}.")
+    if suffix[0] > "7":
+        raise SuffixValidationException(f"Invalid suffix: {suffix}.")
+
     try:
         base32.decode(suffix)
     except Exception as exc:

@@ -1,5 +1,6 @@
 import pytest
 import uuid6
+import uuid as std_uuid
 
 from typeid import TypeID
 from typeid.errors import SuffixValidationException
@@ -138,7 +139,7 @@ def test_uuid_property() -> None:
     uuid = uuid6.uuid7()
 
     typeid = TypeID.from_uuid(suffix=uuid)
-
-    assert isinstance(typeid.uuid, uuid6.UUID)
+    print(type(typeid.uuid))
     assert typeid.uuid.version == uuid.version == 7
+    assert typeid.uuid.bytes == uuid.bytes
     assert typeid.uuid.time == uuid.time

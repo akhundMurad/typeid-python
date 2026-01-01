@@ -1,0 +1,12 @@
+[package]
+name = "typeid_base32"
+version = "0.3.4"
+edition = "2021"
+
+[lib]
+name = "typeid_base32"
+crate-type = ["cdylib"]
+
+[dependencies]
+pyo3 = { version = "0.27.2", features = ["extension-module"] }
+

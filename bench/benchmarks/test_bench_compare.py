@@ -1,4 +1,4 @@
-from .data import TypeID
+from typeid import TypeID
 
 
 def _typeid_workflow():

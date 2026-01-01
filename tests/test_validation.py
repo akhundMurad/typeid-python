@@ -46,7 +46,7 @@ def test_validate_not_ascii_prefix() -> None:
 
 
 def test_validate_correct_suffix() -> None:
-    suffix = base32.encode(list(uuid7().bytes))
+    suffix = base32.encode(uuid7().bytes)
 
     try:
         validate_suffix(suffix)

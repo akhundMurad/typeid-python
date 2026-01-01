@@ -1,12 +1,14 @@
-import uuid
 import warnings
 from typing import Generic, Optional, TypeVar
 
-import uuid6
+import uuid as std_uuid
 
 from typeid import base32
 from typeid.errors import InvalidTypeIDStringException
 from typeid.validation import validate_prefix, validate_suffix
+from typeid._uuid_backend import get_uuid_backend
+
+_backend = get_uuid_backend()
 
 PrefixT = TypeVar("PrefixT", bound=str)
 
@@ -33,6 +35,8 @@ class TypeID(Generic[PrefixT]):
     Type parameters:
         PrefixT: a type-level constraint for the prefix (often `str` or a Literal).
     """
+    
+    __slots__ = ("_prefix", "_suffix", "_uuid")
 
     def __init__(self, prefix: Optional[PrefixT] = None, suffix: Optional[str] = None) -> None:
         """
@@ -51,13 +55,17 @@ class TypeID(Generic[PrefixT]):
                 If `suffix` is invalid, or if `prefix` is invalid.
         """
         # If no suffix is provided, generate a new UUIDv7 and encode it as Base32.
-        suffix = _convert_uuid_to_b32(uuid6.uuid7()) if not suffix else suffix
+        if not suffix:
+            self._uuid = _backend.uuid7()
+            suffix = _convert_uuid_to_b32(self._uuid)
+        else:
+            self._uuid = _convert_b32_to_uuid(suffix)
 
         # Ensure the suffix is a valid encoded UUID representation.
         validate_suffix(suffix=suffix)
 
         # Prefix is optional; when present it must satisfy the project's prefix rules.
-        if prefix is not None:
+        if prefix:
             validate_prefix(prefix=prefix)
 
         # Keep prefix as Optional internally. String rendering decides whether to show it.
@@ -88,7 +96,7 @@ class TypeID(Generic[PrefixT]):
         return cls(suffix=suffix, prefix=prefix)
 
     @classmethod
-    def from_uuid(cls, suffix: uuid.UUID, prefix: Optional[PrefixT] = None) -> "TypeID":
+    def from_uuid(cls, suffix: std_uuid.UUID, prefix: Optional[PrefixT] = None) -> "TypeID":
         """
         Construct a TypeID from an existing UUID.
 
@@ -132,18 +140,14 @@ class TypeID(Generic[PrefixT]):
         return self._prefix or ""
 
     @property
-    def uuid(self) -> uuid6.UUID:
+    def uuid(self) -> std_uuid.UUID:
         """
         The UUID represented by this TypeID.
 
         Returns:
             The decoded UUID value.
-
-        Notes:
-            - This decodes `self.suffix` each time it is accessed.
-            - The UUID type here follows `uuid6.UUID` used by the project.
         """
-        return _convert_b32_to_uuid(self.suffix)
+        return self._uuid
 
     def __str__(self) -> str:
         """
@@ -214,7 +218,7 @@ def from_string(string: str) -> TypeID:
     return TypeID.from_string(string=string)
 
 
-def from_uuid(suffix: uuid.UUID, prefix: Optional[str] = None) -> TypeID:
+def from_uuid(suffix: std_uuid.UUID, prefix: Optional[str] = None) -> TypeID:
     warnings.warn("Consider TypeID.from_uuid instead.", DeprecationWarning)
     return TypeID.from_uuid(suffix=suffix, prefix=prefix)
 
@@ -236,11 +240,20 @@ def get_prefix_and_suffix(string: str) -> tuple:
     return prefix, suffix
 
 
-def _convert_uuid_to_b32(uuid_instance: uuid.UUID) -> str:
-    return base32.encode(list(uuid_instance.bytes))
+def _convert_uuid_to_b32(uuid_instance: std_uuid.UUID) -> str:
+    return base32.encode(uuid_instance.bytes)
 
 
-def _convert_b32_to_uuid(b32: str) -> uuid6.UUID:
+def _convert_b32_to_uuid(b32: str) -> std_uuid.UUID:
     uuid_bytes = bytes(base32.decode(b32))
-    uuid_int = int.from_bytes(uuid_bytes, byteorder="big")
-    return uuid6.UUID(int=uuid_int, version=7)
+    uuid_int = int.from_bytes(uuid_bytes, "big")
+
+    # Prefer uuid6 for correct UUIDv7 semantics (.time etc.)
+    try:
+        import uuid6
+        return uuid6.UUID(int=uuid_int)
+    except Exception:
+        pass
+
+    # Fallback to stdlib UUID
+    return std_uuid.UUID(bytes=uuid_bytes)

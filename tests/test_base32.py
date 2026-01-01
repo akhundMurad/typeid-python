@@ -2,7 +2,7 @@ from typeid.base32 import decode, encode
 
 
 def test_encode_decode_logic() -> None:
-    original_data = list(range(0, 16))
+    original_data = bytes(range(0, 16))
 
     encoded_data = encode(original_data)
 
