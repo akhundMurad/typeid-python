@@ -1,10 +1,14 @@
 [package]
 name = "typeid-base32"
-version = "0.3.6"
+version = "0.3.7"
 edition = "2021"
 
+description = "Rust-accelerated base32 codec for typeid-python"
+license = "MIT"
+repository = "https://github.com/akhundMurad/typeid-python"
+
 [lib]
-name = "typeid_base32"
+name = "_base32"
 crate-type = ["cdylib"]
 
 [dependencies]
