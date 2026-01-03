@@ -16,14 +16,6 @@ build-sdist:
 	@ls -la dist
 
 
-test-release:
-	uv run twine upload --repository testpypi dist/* --verbose
-
-
-release:
-	uv run twine upload --repository pypi dist/* --verbose
-
-
 test:
 	uv run pytest -v
 
@@ -38,4 +30,3 @@ docs:
 
 docs-build: 
 	mkdocs build
-
