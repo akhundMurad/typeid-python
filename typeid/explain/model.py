@@ -50,7 +50,7 @@ class ParsedTypeID:
     errors: List[ParseError] = field(default_factory=list)
 
     # Derived (best-effort)
-    uuid: Optional[str] = None  # keep as string to avoid uuid/uuid6 typing bleed
+    uuid: Optional[str] = None
     created_at: Optional[datetime] = None
     sortable: Optional[bool] = None  # TypeIDs w/ UUIDv7 are typically sortable
 

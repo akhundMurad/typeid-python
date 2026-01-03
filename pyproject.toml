@@ -9,8 +9,9 @@ license = "MIT"
 keywords = [
     "typeid",
     "uuid",
-    "uuid6",
+    "rust",
     "guid",
+    "uuid7",
 ]
 classifiers = [
     "Development Status :: 3 - Alpha",
@@ -22,12 +23,11 @@ classifiers = [
     "Programming Language :: Python :: 3.14",
     "Operating System :: OS Independent",
 ]
-dependencies = ["uuid6>=2024.7.10,<2026.0.0"]
+dependencies = ["uuid-utils>=0.12.0"]
 
 [project.optional-dependencies]
 cli = ["click"]
 yaml = ["PyYAML"]
-rust = ["uuid-utils>=0.12.0", "typeid-base32>=0.3.5,<0.4.0"]
 
 [project.urls] 
 Homepage = "https://github.com/akhundMurad/typeid-python"
@@ -57,12 +57,12 @@ dev = [
     "maturin>=1.5; platform_system != 'Windows'"
 ]
 
-[tool.hatch.build.targets.sdist]
-include = ["typeid"]
-
-[tool.hatch.build.targets.wheel]
-include = ["typeid"]
-
 [build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+requires = ["maturin>=1.5"]
+build-backend = "maturin"
+
+[tool.maturin]
+python-source = "."
+manifest-path = "rust-base32/Cargo.toml"
+module-name = "typeid._base32"
+features = ["pyo3/extension-module"]

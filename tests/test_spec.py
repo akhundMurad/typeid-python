@@ -1,5 +1,5 @@
 import pytest
-from uuid6 import UUID
+from uuid_utils import UUID
 
 from typeid import TypeID
 from typeid.errors import TypeIDException

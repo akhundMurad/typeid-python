@@ -107,7 +107,7 @@ fn decode(s: &str) -> PyResult<Vec<u8>> {
 }
 
 #[pymodule]
-fn typeid_base32(_py: Python<'_>, m: &Bound<'_, PyModule>) -> PyResult<()> {
+fn _base32(_py: Python<'_>, m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(encode, m)?)?;
     m.add_function(wrap_pyfunction!(decode, m)?)?;
     Ok(())

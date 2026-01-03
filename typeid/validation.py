@@ -1,7 +1,7 @@
 import re
 
 from typeid import base32
-from typeid.constants import SUFFIX_LEN
+from typeid.constants import SUFFIX_LEN, ALPHABET
 from typeid.errors import PrefixValidationException, SuffixValidationException
 
 _PREFIX_RE = re.compile(r"^([a-z]([a-z0-9_]{0,61}[a-z0-9])?)?$")  # allow digits too (spec-like)
@@ -23,7 +23,7 @@ def validate_suffix_and_decode(suffix: str) -> bytes:
         or suffix == ""
         or " " in suffix
         or (not suffix.isdigit() and not suffix.islower())
-        or any([symbol not in base32.ALPHABET for symbol in suffix])
+        or any([symbol not in ALPHABET for symbol in suffix])
         or suffix[0] > "7"
     ):
         raise SuffixValidationException(f"Invalid suffix: {suffix}.")

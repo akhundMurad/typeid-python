@@ -10,16 +10,10 @@ It is intentionally short. The goal is to get you productive quickly, not to exp
 
 Install the package using your preferred tool.
 
-- Standard installation (uses `uuid6` library):
+- Standard installation:
 
     ```console
     $ pip install typeid-python
-    ```
-
-- Rust acceleration (`uuid-utils` + Rust base32 encode/decode):
-
-    ```console
-    $ pip install "typeid-python[rust]"
     ```
 
 - YAML schemas support:
@@ -125,14 +119,13 @@ tid.uuid
 ```
 
 > **_NOTE:_**
-> The exact Python type returned by `tid.uuid` depends on the available backend.
 > For time-related information, prefer `typeid explain` or derived properties (`.created_at`)
-> over backend-specific UUID attributes.
+> over specific UUID attributes.
 
 And you can always reconstruct a TypeID from a UUID:
 
 ```python
-from uuid6 import uuid7
+from uuid_utils import uuid7
 from typeid import TypeID
 
 u = uuid7()
