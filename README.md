@@ -1,19 +1,10 @@
 # TypeID Python
 
-<a href="https://github.com/akhundMurad/typeid-python/actions?query=setup%3ACI%2FCD+event%3Apush+branch%3Amain" target="_blank">
-    <img src="https://github.com/akhundMurad/typeid-python/actions/workflows/setup.yml/badge.svg?event=push&branch=main" alt="Test">
-</a>
-<a href="https://pepy.tech/project/typeid-python" target="_blank">
-    <img src="https://static.pepy.tech/personalized-badge/typeid-python?period=total&units=international_system&left_color=black&right_color=red&left_text=downloads" alt="Downloads">
-</a>
-<a href="https://pypi.org/project/typeid-python" target="_blank">
-    <img src="https://img.shields.io/pypi/v/typeid-python?color=red&labelColor=black" alt="Package version">
-</a>
-<a href="https://pypi.org/project/typeid-python" target="_blank">
-    <img src="https://img.shields.io/pypi/pyversions/typeid-python.svg?color=red&labelColor=black" alt="Supported Python versions">
-</a>
+[![Run Tests](https://github.com/akhundMurad/typeid-python/actions/workflows/test.yml/badge.svg)](https://github.com/akhundMurad/typeid-python/actions/workflows/test.yml)
+[![PyPI Downloads](https://static.pepy.tech/personalized-badge/typeid-python?period=total&units=INTERNATIONAL_SYSTEM&left_color=BLACK&right_color=GREEN&left_text=downloads)](https://pepy.tech/projects/typeid-python)
+[![PyPI - Version](https://img.shields.io/pypi/v/typeid-python?color=green)](https://pypi.org/project/typeid-python/)
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/typeid-python?color=green)](https://pypi.org/project/typeid-python/)
 
-## TypeID for Python
 
 A **high-performance Python implementation of [TypeIDs](https://github.com/jetpack-io/typeid)** — type-safe,
 sortable identifiers based on **UUIDv7**.
