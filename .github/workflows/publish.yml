@@ -12,36 +12,15 @@ jobs:
   test:
     uses: ./.github/workflows/test.yml
 
-  publish-docs:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-
-      - name: Install uv
-        uses: astral-sh/setup-uv@v3
-
-      - name: Sync dependencies (locked)
-        run: |
-          uv sync --locked --all-groups
-
-      - name: Deploy to Pages
-        run: uv run mkdocs gh-deploy --force
-
   build-wheels:
     name: Build wheels (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
-    needs:
-      - test
-      - publish-docs
+    needs: test
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        python-version: ["3.11"]
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
 
     steps:
       - name: Checkout
@@ -76,8 +55,7 @@ jobs:
 
   build-sdist:
     runs-on: ubuntu-latest
-    needs:
-      - test
+    needs: build-wheels
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -106,11 +84,9 @@ jobs:
           name: sdist
           path: dist/*.tar.gz
 
-  publish:
+  publish-package:
     runs-on: ubuntu-latest
-    needs:
-      - build-wheels
-      - build-sdist
+    needs: build-sdist
     permissions:
       contents: read
       id-token: write
@@ -131,3 +107,23 @@ jobs:
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           packages-dir: out
+
+  publish-docs:
+    runs-on: ubuntu-latest
+    needs: publish-package
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+
+      - name: Sync dependencies (locked)
+        run: |
+          uv sync --locked --all-groups
+
+      - name: Deploy to Pages
+        run: uv run mkdocs gh-deploy --force
