@@ -17,9 +17,7 @@ Benchmarks were run with:
 - OS: macOS / Linux
 - CPU: Apple Silicon / x86_64
 - Tooling: `pytest-benchmark`
-- UUID backends:
-  - `uuid-utils` (Rust, optional)
-  - `uuid6` (Python, legacy comparison)
+- UUID backend: `uuid-utils` (Rust)
 
 Exact environment details are embedded in each JSON result file.
 
@@ -64,7 +62,7 @@ These files are the **source of truth**.
 
 ## Comparison summary (mean time, µs)
 
-| Benchmark           | 0001 – Before Rust | 0002 – Rust + optimizations | Speedup (0004 vs 0001) |
+| Benchmark           | 0001 – Before Rust | 0002 – Rust + optimizations | Speedup (0002 vs 0001) |
 | ------------------- | -----------------: | --------------------------: | ---------------------: |
 | **TypeID generate** |           3.467 µs |                **0.701 µs** |       **4.94× faster** |
 | **TypeID parse**    |           2.076 µs |                **1.296 µs** |       **1.60× faster** |
@@ -87,24 +85,6 @@ These files are the **source of truth**.
 * Cached string rendering
 
 Result: parse and workflow became faster than the original Python baseline.
-
-## UUID backend comparison (context)
-
-These numbers represent the approximate lower bound:
-
-| Operation | uuid-utils |    uuid6 |
-| --------- | ---------: | -------: |
-| Generate  |   ~0.08 µs | ~1.51 µs |
-| Parse     |   ~0.12 µs | ~0.53 µs |
-
-TypeID adds overhead for:
-
-* base32 encoding
-* prefix handling
-* validation
-* safety guarantees
-
-This overhead is now reduced to approximately **1–2 µs**, depending on the operation.
 
 ## Cold path vs warm path
 

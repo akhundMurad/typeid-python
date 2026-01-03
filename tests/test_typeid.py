@@ -1,7 +1,7 @@
 from datetime import datetime, timezone
 from uuid import UUID
 import pytest
-import uuid6
+import uuid_utils
 
 from typeid import TypeID
 from typeid.errors import SuffixValidationException
@@ -104,7 +104,7 @@ def test_construct_type_from_invalid_string() -> None:
 
 
 def test_construct_type_from_uuid() -> None:
-    uuid = uuid6.uuid7()
+    uuid = uuid_utils.uuid7()
 
     typeid = TypeID.from_uuid(suffix=uuid, prefix="")
 
@@ -114,7 +114,7 @@ def test_construct_type_from_uuid() -> None:
 
 
 def test_construct_type_from_uuid_with_prefix() -> None:
-    uuid = uuid6.uuid7()
+    uuid = uuid_utils.uuid7()
     prefix = "prefix"
 
     typeid = TypeID.from_uuid(prefix=prefix, suffix=uuid)
@@ -137,7 +137,7 @@ def test_hash_type_id() -> None:
 
 
 def test_uuid_property() -> None:
-    uuid = uuid6.uuid7()
+    uuid = uuid_utils.uuid7()
 
     typeid = TypeID.from_uuid(suffix=uuid)
     print(type(typeid.uuid))

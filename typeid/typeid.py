@@ -1,31 +1,21 @@
 from datetime import datetime, timezone
 import warnings
+import uuid_utils
 from typing import Generic, Optional, TypeVar
-
-import uuid as std_uuid
 
 from typeid import base32
 from typeid.errors import InvalidTypeIDStringException
 from typeid.validation import validate_prefix, validate_suffix_and_decode
-from typeid._uuid_backend import get_uuid_backend
-
-_backend = get_uuid_backend()
 
 PrefixT = TypeVar("PrefixT", bound=str)
 
 
-def _uuid_from_bytes_v7(uuid_bytes: bytes) -> std_uuid.UUID:
+def _uuid_from_bytes_v7(uuid_bytes: bytes) -> uuid_utils.UUID:
     """
     Construct a UUID object from bytes.
-    Prefer uuid6 (if installed) to preserve UUIDv7 semantics like `.time`.
     """
-    try:
-        import uuid6  # type: ignore
-
-        uuid_int = int.from_bytes(uuid_bytes, "big")
-        return uuid6.UUID(int=uuid_int)
-    except Exception:
-        return std_uuid.UUID(bytes=uuid_bytes)
+    uuid_int = int.from_bytes(uuid_bytes, "big")
+    return uuid_utils.UUID(int=uuid_int)
 
 
 class TypeID(Generic[PrefixT]):
@@ -75,12 +65,12 @@ class TypeID(Generic[PrefixT]):
         self._prefix: Optional[PrefixT] = prefix
 
         self._str: Optional[str] = None
-        self._uuid: Optional[std_uuid.UUID] = None
+        self._uuid: Optional[uuid_utils.UUID] = None
         self._uuid_bytes: Optional[bytes] = None
 
         if not suffix:
             # generate uuid (fast path)
-            u = _backend.uuid7()
+            u = uuid_utils.uuid7()
             uuid_bytes = u.bytes
             suffix = base32.encode(uuid_bytes)
             # Cache UUID object (keep original type for user expectations)
@@ -117,7 +107,7 @@ class TypeID(Generic[PrefixT]):
         return cls(suffix=suffix, prefix=prefix)
 
     @classmethod
-    def from_uuid(cls, suffix: std_uuid.UUID, prefix: Optional[PrefixT] = None) -> "TypeID":
+    def from_uuid(cls, suffix: uuid_utils.UUID, prefix: Optional[PrefixT] = None) -> "TypeID":
         """
         Construct a TypeID from an existing UUID.
 
@@ -142,7 +132,7 @@ class TypeID(Generic[PrefixT]):
         obj._prefix = prefix
         obj._suffix = suffix_str
         obj._uuid_bytes = uuid_bytes
-        obj._uuid = suffix  # keep original object type (uuid6/uuid_utils/stdlib)
+        obj._uuid = suffix  # keep original object type
         obj._str = None
         return obj
 
@@ -172,7 +162,7 @@ class TypeID(Generic[PrefixT]):
         return self._prefix or ""
 
     @property
-    def uuid(self) -> std_uuid.UUID:
+    def uuid(self) -> uuid_utils.UUID:
         """
         The UUID represented by this TypeID.
 
@@ -193,9 +183,6 @@ class TypeID(Generic[PrefixT]):
         This returns the canonical 16-byte representation of the UUID encoded
         in this TypeID. The value is derived lazily from the suffix and cached
         on first access.
-
-        This property is backend-agnostic and independent of the concrete
-        UUID implementation used internally.
 
         Returns:
             A 16-byte ``bytes`` object representing the UUID.
@@ -307,7 +294,7 @@ def from_string(string: str) -> TypeID:
     return TypeID.from_string(string=string)
 
 
-def from_uuid(suffix: std_uuid.UUID, prefix: Optional[str] = None) -> TypeID:
+def from_uuid(suffix: uuid_utils.UUID, prefix: Optional[str] = None) -> TypeID:
     warnings.warn("Consider TypeID.from_uuid instead.", DeprecationWarning)
     return TypeID.from_uuid(suffix=suffix, prefix=prefix)
 

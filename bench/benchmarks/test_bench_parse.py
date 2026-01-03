@@ -1,10 +1,10 @@
 from typeid import TypeID
-import uuid6
+import uuid
 import uuid_utils
 
 
 TYPEID_STR = str(TypeID("user"))
-UUID_STR = str(uuid6.uuid7())
+UUID_STR = str(uuid_utils.uuid7())
 
 
 def test_typeid_parse(benchmark):
@@ -14,10 +14,6 @@ def test_typeid_parse(benchmark):
 def test_typeid_parse_reuse(benchmark):
     s = str(TypeID("user"))
     benchmark(lambda: TypeID.from_string(s))
-
-
-def test_uuid6_parse(benchmark):
-    benchmark(uuid6.UUID, UUID_STR)
 
 
 def test_uuid_utils_parse(benchmark):

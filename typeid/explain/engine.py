@@ -68,7 +68,7 @@ def explain(
     if enable_schema and schema_lookup is not None and parsed.prefix:
         try:
             schema = schema_lookup(parsed.prefix)
-        except Exception as e:  # never let schema backend break explain
+        except Exception as e:
             exp.warnings.append(f"Schema lookup failed: {e!s}")
             schema = None
 
@@ -128,7 +128,7 @@ def _parse_typeid(id_str: str) -> ParsedTypeID:
         )
 
     # Derived facts from the validated TypeID
-    uuid_obj = tid.uuid  # library returns a UUID object (uuid6.UUID)
+    uuid_obj = tid.uuid  # library returns a UUID object
     uuid_str = str(uuid_obj)
 
     ver = _uuid_version(uuid_obj)
@@ -173,7 +173,6 @@ def _uuid7_created_at(uuid_obj: Any) -> Optional[datetime]:
         UTC datetime or None if extraction fails.
     """
     try:
-        # uuid_obj is likely uuid6.UUID, but supports .int like uuid.UUID
         u_int = int(uuid_obj.int)
         unix_ms = u_int >> 80
         unix_s = unix_ms / 1000.0
@@ -251,7 +250,6 @@ def _apply_derived_provenance(exp: Explanation) -> None:
 
 def _uuid_version(u: Any) -> Optional[int]:
     try:
-        # uuid.UUID and uuid6.UUID both usually expose .version
         return int(u.version)
     except Exception:
         return None

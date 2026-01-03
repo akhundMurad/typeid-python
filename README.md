@@ -56,24 +56,16 @@ See [`Docs: Performance`](https://akhundmurad.github.io/typeid-python/performanc
 
 ## Installation
 
-### Core (pure Python)
+### Core
 
 ```console
 $ pip install typeid-python
 ```
 
-### With Rust acceleration (recommended)
-
-```console
-$ pip install typeid-python[rust]
-```
-
-This enables:
+Included:
 
 * Rust base32 encode/decode
 * `uuid-utils` for fast UUIDv7 generation
-
-If Rust is unavailable, TypeID automatically falls back to the pure-Python implementation.
 
 ### Other optional extras
 
@@ -111,7 +103,7 @@ assert tid.prefix == "user"
 
 ```python
 from typeid import TypeID
-from uuid6 import uuid7
+from uuid_utils import uuid7
 
 u = uuid7()
 tid = TypeID.from_uuid(prefix="user", suffix=u)

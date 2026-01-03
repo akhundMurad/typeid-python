@@ -1,5 +1,5 @@
 from typeid import TypeID
-import uuid6
+import uuid
 import uuid_utils
 
 
@@ -7,8 +7,8 @@ def test_typeid_generate(benchmark):
     benchmark(TypeID, "user")
 
 
-def test_uuid6_generate(benchmark):
-    benchmark(uuid6.uuid7)
+def test_uuid4_generate(benchmark):
+    benchmark(uuid.uuid4)
 
 
 def test_uuid_utils_generate(benchmark):

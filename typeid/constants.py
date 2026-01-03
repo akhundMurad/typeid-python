@@ -1,3 +1,5 @@
 SUFFIX_LEN = 26
 
 PREFIX_MAX_LEN = 63
+
+ALPHABET = "0123456789abcdefghjkmnpqrstvwxyz"

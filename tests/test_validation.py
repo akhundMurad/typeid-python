@@ -1,5 +1,5 @@
 import pytest
-from uuid6 import uuid7
+from uuid_utils import uuid7
 
 from typeid import base32
 from typeid.errors import PrefixValidationException, SuffixValidationException

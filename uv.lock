@@ -1298,29 +1298,16 @@ wheels = [
 ]
 
 [[package]]
-name = "typeid-base32"
-version = "0.3.5"
-source = { registry = "https://pypi.org/simple" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/ac/dd/1dcc54960bb9a014dfcb646946e35ebf777e9b08b9da8ff8aca986a0ea1a/typeid_base32-0.3.5-cp311-cp311-macosx_11_0_arm64.whl", hash = "sha256:b4087efae9a82edec788aef1b31ee64bfd1a94d8d5a6b5da077e710d3c014ad6", size = 208486, upload-time = "2026-01-03T15:56:22.982Z" },
-    { url = "https://files.pythonhosted.org/packages/02/8e/52c9468e49ac9db141ca85e5a31240fa63259e0e9982d38473ac28c40453/typeid_base32-0.3.5-cp311-cp311-win_amd64.whl", hash = "sha256:e7ef97f472d7cf166130d5f56711331fb6367283326d03750660fdf239493234", size = 99966, upload-time = "2026-01-03T15:56:24.363Z" },
-]
-
-[[package]]
 name = "typeid-python"
 version = "0.3.6"
 source = { editable = "." }
 dependencies = [
-    { name = "uuid6" },
+    { name = "uuid-utils" },
 ]
 
 [package.optional-dependencies]
 cli = [
     { name = "click" },
-]
-rust = [
-    { name = "typeid-base32" },
-    { name = "uuid-utils" },
 ]
 yaml = [
     { name = "pyyaml" },
@@ -1350,11 +1337,9 @@ dev = [
 requires-dist = [
     { name = "click", marker = "extra == 'cli'" },
     { name = "pyyaml", marker = "extra == 'yaml'" },
-    { name = "typeid-base32", marker = "extra == 'rust'", specifier = ">=0.3.5,<0.4.0" },
-    { name = "uuid-utils", marker = "extra == 'rust'", specifier = ">=0.12.0" },
-    { name = "uuid6", specifier = ">=2024.7.10,<2026.0.0" },
+    { name = "uuid-utils", specifier = ">=0.12.0" },
 ]
-provides-extras = ["cli", "yaml", "rust"]
+provides-extras = ["cli", "yaml"]
 
 [package.metadata.requires-dev]
 dev = [
@@ -1430,15 +1415,6 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/f6/b3/9dccdc6f3c22f6ef5bd381ae559173f8a1ae185ae89ed1f39f499d9d8b02/uuid_utils-0.12.0-pp311-pypy311_pp73-manylinux_2_17_ppc64le.manylinux2014_ppc64le.whl", hash = "sha256:f8f2bdf5e4ffeb259ef6d15edae92aed60a1d6f07cbfab465d836f6b12b48da8", size = 469123, upload-time = "2025-12-01T17:29:52.389Z" },
     { url = "https://files.pythonhosted.org/packages/fd/90/6c35ef65fbc49f8189729839b793a4a74a7dd8c5aa5eb56caa93f8c97732/uuid_utils-0.12.0-pp311-pypy311_pp73-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:8c3ec53c0cb15e1835870c139317cc5ec06e35aa22843e3ed7d9c74f23f23898", size = 335892, upload-time = "2025-12-01T17:29:53.44Z" },
     { url = "https://files.pythonhosted.org/packages/6b/c7/e3f3ce05c5af2bf86a0938d22165affe635f4dcbfd5687b1dacc042d3e0e/uuid_utils-0.12.0-pp311-pypy311_pp73-manylinux_2_5_i686.manylinux1_i686.whl", hash = "sha256:84e5c0eba209356f7f389946a3a47b2cc2effd711b3fc7c7f155ad9f7d45e8a3", size = 360693, upload-time = "2025-12-01T17:29:54.558Z" },
-]
-
-[[package]]
-name = "uuid6"
-version = "2025.0.1"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/ca/b7/4c0f736ca824b3a25b15e8213d1bcfc15f8ac2ae48d1b445b310892dc4da/uuid6-2025.0.1.tar.gz", hash = "sha256:cd0af94fa428675a44e32c5319ec5a3485225ba2179eefcf4c3f205ae30a81bd", size = 13932, upload-time = "2025-07-04T18:30:35.186Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/3d/b2/93faaab7962e2aa8d6e174afb6f76be2ca0ce89fde14d3af835acebcaa59/uuid6-2025.0.1-py3-none-any.whl", hash = "sha256:80530ce4d02a93cdf82e7122ca0da3ebbbc269790ec1cb902481fa3e9cc9ff99", size = 6979, upload-time = "2025-07-04T18:30:34.001Z" },
 ]
 
 [[package]]
