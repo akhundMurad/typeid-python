@@ -3,8 +3,6 @@ import warnings
 import uuid_utils
 from typing import Generic, Optional, TypeVar
 
-import uuid as std_uuid
-
 from typeid import base32
 from typeid.errors import InvalidTypeIDStringException
 from typeid.validation import validate_prefix, validate_suffix_and_decode
@@ -12,7 +10,7 @@ from typeid.validation import validate_prefix, validate_suffix_and_decode
 PrefixT = TypeVar("PrefixT", bound=str)
 
 
-def _uuid_from_bytes_v7(uuid_bytes: bytes) -> std_uuid.UUID:
+def _uuid_from_bytes_v7(uuid_bytes: bytes) -> uuid_utils.UUID:
     """
     Construct a UUID object from bytes.
     """
@@ -67,7 +65,7 @@ class TypeID(Generic[PrefixT]):
         self._prefix: Optional[PrefixT] = prefix
 
         self._str: Optional[str] = None
-        self._uuid: Optional[std_uuid.UUID] = None
+        self._uuid: Optional[uuid_utils.UUID] = None
         self._uuid_bytes: Optional[bytes] = None
 
         if not suffix:
@@ -109,7 +107,7 @@ class TypeID(Generic[PrefixT]):
         return cls(suffix=suffix, prefix=prefix)
 
     @classmethod
-    def from_uuid(cls, suffix: std_uuid.UUID, prefix: Optional[PrefixT] = None) -> "TypeID":
+    def from_uuid(cls, suffix: uuid_utils.UUID, prefix: Optional[PrefixT] = None) -> "TypeID":
         """
         Construct a TypeID from an existing UUID.
 
@@ -164,7 +162,7 @@ class TypeID(Generic[PrefixT]):
         return self._prefix or ""
 
     @property
-    def uuid(self) -> std_uuid.UUID:
+    def uuid(self) -> uuid_utils.UUID:
         """
         The UUID represented by this TypeID.
 
@@ -296,7 +294,7 @@ def from_string(string: str) -> TypeID:
     return TypeID.from_string(string=string)
 
 
-def from_uuid(suffix: std_uuid.UUID, prefix: Optional[str] = None) -> TypeID:
+def from_uuid(suffix: uuid_utils.UUID, prefix: Optional[str] = None) -> TypeID:
     warnings.warn("Consider TypeID.from_uuid instead.", DeprecationWarning)
     return TypeID.from_uuid(suffix=suffix, prefix=prefix)
 
