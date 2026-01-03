@@ -48,7 +48,7 @@ jobs:
 
   test-rust-accel:
     runs-on: ${{ matrix.os }}
-    needs: 
+    needs:
       - test
     strategy:
       fail-fast: false
@@ -71,9 +71,9 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@v3
 
-      - name: Sync deps (locked)
+      - name: Sync deps (locked, no extras)
         run: |
-          uv sync --locked --all-groups --all-extras
+          uv sync --locked --all-groups
 
       - name: Build & install Rust extension (maturin develop)
         uses: PyO3/maturin-action@v1
@@ -81,6 +81,13 @@ jobs:
           command: develop
           args: --release
           working-directory: rust-base32
+
+      # Install the remaining deps of the rust extra WITHOUT trying to fetch typeid-base32
+      - name: Install rust extra deps (without fetching typeid-base32)
+        shell: bash
+        run: |
+          uv pip install "uuid-utils>=0.12.0"
+          uv pip install -e ".[rust]" --no-deps
 
       - name: Sanity check (import extension)
         run: |

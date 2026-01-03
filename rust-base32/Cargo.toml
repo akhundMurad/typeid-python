@@ -1,6 +1,6 @@
 [package]
-name = "typeid_base32"
-version = "0.3.5"
+name = "typeid-base32"
+version = "0.3.6"
 edition = "2021"
 
 [lib]
