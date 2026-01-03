@@ -1,9 +1,9 @@
 name: Publish Docs
 
 on:
-  push:
-    tags:
-      - "v*"
+  release:
+    types: [published]
+  workflow_call:
 
 permissions:
   contents: write
@@ -15,14 +15,13 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: test
-
     steps:
       - uses: actions/checkout@v4
 
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      
+
       - name: Install uv
         uses: astral-sh/setup-uv@v3
 
