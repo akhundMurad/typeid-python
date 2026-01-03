@@ -155,7 +155,7 @@ make fix-linting
 Build wheel and source distribution:
 
 ```bash
-make build
+make build-sdist
 ```
 
 This uses `uv build` under the hood.
