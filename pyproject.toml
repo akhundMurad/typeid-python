@@ -27,7 +27,7 @@ dependencies = ["uuid6>=2024.7.10,<2026.0.0"]
 [project.optional-dependencies]
 cli = ["click"]
 yaml = ["PyYAML"]
-rust = ["uuid-utils>=0.12.0", "typeid_base32>=0.3.5,<0.4.0"]
+rust = ["uuid-utils>=0.12.0", "typeid-base32>=0.3.5,<0.4.0"]
 
 [project.urls] 
 Homepage = "https://github.com/akhundMurad/typeid-python"

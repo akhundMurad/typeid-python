@@ -153,8 +153,8 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b1dd07eb858a2067e2f3c7155d54e929265c264e6f37efe3ee7a8d1b5a1dd0ba"
 
 [[package]]
-name = "typeid_base32"
-version = "0.3.5"
+name = "typeid-base32"
+version = "0.3.6"
 dependencies = [
  "pyo3",
 ]
