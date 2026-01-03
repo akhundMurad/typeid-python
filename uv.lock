@@ -1298,8 +1298,17 @@ wheels = [
 ]
 
 [[package]]
-name = "typeid-python"
+name = "typeid-base32"
 version = "0.3.5"
+source = { registry = "https://pypi.org/simple" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/ac/dd/1dcc54960bb9a014dfcb646946e35ebf777e9b08b9da8ff8aca986a0ea1a/typeid_base32-0.3.5-cp311-cp311-macosx_11_0_arm64.whl", hash = "sha256:b4087efae9a82edec788aef1b31ee64bfd1a94d8d5a6b5da077e710d3c014ad6", size = 208486, upload-time = "2026-01-03T15:56:22.982Z" },
+    { url = "https://files.pythonhosted.org/packages/02/8e/52c9468e49ac9db141ca85e5a31240fa63259e0e9982d38473ac28c40453/typeid_base32-0.3.5-cp311-cp311-win_amd64.whl", hash = "sha256:e7ef97f472d7cf166130d5f56711331fb6367283326d03750660fdf239493234", size = 99966, upload-time = "2026-01-03T15:56:24.363Z" },
+]
+
+[[package]]
+name = "typeid-python"
+version = "0.3.6"
 source = { editable = "." }
 dependencies = [
     { name = "uuid6" },
@@ -1310,6 +1319,7 @@ cli = [
     { name = "click" },
 ]
 rust = [
+    { name = "typeid-base32" },
     { name = "uuid-utils" },
 ]
 yaml = [
@@ -1340,6 +1350,7 @@ dev = [
 requires-dist = [
     { name = "click", marker = "extra == 'cli'" },
     { name = "pyyaml", marker = "extra == 'yaml'" },
+    { name = "typeid-base32", marker = "extra == 'rust'", specifier = ">=0.3.5,<0.4.0" },
     { name = "uuid-utils", marker = "extra == 'rust'", specifier = ">=0.12.0" },
     { name = "uuid6", specifier = ">=2024.7.10,<2026.0.0" },
 ]
