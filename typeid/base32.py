@@ -1,4 +1,4 @@
-from typeid._base32 import encode as _encode_rust, decode as _decode_rust
+from typeid._base32 import encode as _encode_rust, decode as _decode_rust  # type: ignore
 
 
 def encode(src: bytes) -> str:
