@@ -22,6 +22,13 @@ jobs:
         run: |
           uv sync --locked --all-groups
 
+      - name: Build & install native extension (maturin develop)
+        uses: PyO3/maturin-action@v1
+        with:
+          command: develop
+          args: --release
+          manylinux: "2_28"
+
       - name: Run linters
         run: |
           make check-linting
