@@ -37,7 +37,6 @@ jobs:
       - name: Sync dependencies (locked)
         run: |
           uv sync --locked --all-groups
-          uv sync --extra rust
 
       - name: Run tests
         run: |
