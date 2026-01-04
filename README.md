@@ -16,7 +16,7 @@ TypeIDs are designed for modern systems where identifiers should be:
 - safe to expose externally
 - easy to reason about in logs, APIs, and databases
 
-This library provides a Python package with optional Rust acceleration.
+This library provides a Python package with Rust acceleration.
 
 ## Key features
 
@@ -197,7 +197,6 @@ Read more here: ["Docs: Explain"](https://akhundmurad.github.io/typeid-python/pe
 ## Design principles
 
 * **Non-breaking**: stable APIs
-* **Optional acceleration**: Rust is opt-in
 * **Lazy evaluation**: work is done only when needed
 * **Explainability**: identifiers carry meaning
 * **Transparency**: performance claims are backed by data
