@@ -1,32 +1,81 @@
-check-linting:
-	uv run ruff check typeid/ tests/
-	uv run black --check --diff typeid/ tests/ --line-length 119
-	uv run mypy typeid/ --pretty
+# ==============================================================================
+# Project configuration
+# ==============================================================================
 
+PACKAGE      := typeid
+TESTS        := tests
+DIST_DIR     := dist
+VENV_DIR     := .venv
 
-fix-linting:
-	uv run ruff check --fix typeid/ tests/
-	uv run black typeid/ tests/ --line-length 119
+UV           := uv run
+PYTEST       := $(UV) pytest
+RUFF         := $(UV) ruff
+BLACK        := $(UV) black
+MYPY         := $(UV) mypy
 
+# ==============================================================================
+# Phony targets
+# ==============================================================================
 
-.PHONY: build-sdist
-build-sdist:
-	@rm -rf dist build *.egg-info .venv
-	@uv build --sdist -o dist
-	@ls -la dist
+.PHONY: help lint lint-fix test test-docs docs docs-build build-sdist clean
 
+# ==============================================================================
+# Help
+# ==============================================================================
+
+help:
+	@echo "Available targets:"
+	@echo ""
+	@echo "  lint         Run all linters (ruff, black, mypy)"
+	@echo "  lint-fix     Automatically fix linting issues"
+	@echo "  test         Run test suite"
+	@echo "  test-docs    Run documentation tests"
+	@echo "  docs         Serve documentation locally"
+	@echo "  docs-build   Build documentation"
+	@echo "  build-sdist  Build source distribution"
+	@echo "  clean        Remove build artifacts"
+	@echo ""
+
+# ==============================================================================
+# Linting
+# ==============================================================================
+
+lint:
+	$(RUFF) check $(PACKAGE)/ $(TESTS)/
+	$(BLACK) --check --diff $(PACKAGE)/ $(TESTS)/
+	$(MYPY) $(PACKAGE)/
+
+lint-fix:
+	$(RUFF) check --fix $(PACKAGE)/ $(TESTS)/
+	$(BLACK) $(PACKAGE)/ $(TESTS)/
+
+# ==============================================================================
+# Testing
+# ==============================================================================
 
 test:
-	uv run pytest -v
-
+	$(PYTEST) -v $(TESTS)
 
 test-docs:
-	uv run pytest README.md docs/ --markdown-docs
+	$(PYTEST) README.md docs/ --markdown-docs
 
+# ==============================================================================
+# Documentation
+# ==============================================================================
 
 docs:
 	mkdocs serve
 
-
-docs-build: 
+docs-build:
 	mkdocs build
+
+# ==============================================================================
+# Build & cleanup
+# ==============================================================================
+
+build-sdist: clean
+	@uv build --sdist -o $(DIST_DIR)
+	@ls -la $(DIST_DIR)
+
+clean:
+	@rm -rf $(DIST_DIR) build *.egg-info $(VENV_DIR)

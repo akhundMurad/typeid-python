@@ -49,6 +49,8 @@ Create and sync the virtual environment (including dev dependencies):
 
 ```bash
 uv sync --all-groups --all-extras
+
+uv run pre-commit install
 ```
 
 This will:
@@ -56,6 +58,8 @@ This will:
 - create a local `.venv/`
 - install dependencies according to `uv.lock`
 - keep the environment reproducible
+- setup pre-commit hooks
+
 
 ## Running tests
 
@@ -141,13 +145,13 @@ We use:
 Run all linters:
 
 ```bash
-make check-linting
+make lint
 ```
 
 Auto-fix formatting where possible:
 
 ```bash
-make fix-linting
+make lint-fix
 ```
 
 ## Building the package
