@@ -1,12 +1,12 @@
 # TypeID Python
 
-> [!WARNING]
-> `main` may contain unreleased changes. For stable usage, use the latest release tag.
-
 [![PyPI - Version](https://img.shields.io/pypi/v/typeid-python?color=green)](https://pypi.org/project/typeid-python/)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/typeid-python?color=green)](https://pypi.org/project/typeid-python/)
 [![PyPI Downloads](https://static.pepy.tech/personalized-badge/typeid-python?period=total&units=INTERNATIONAL_SYSTEM&left_color=BLACK&right_color=GREEN&left_text=downloads)](https://pepy.tech/projects/typeid-python)
 ![GitHub License](https://img.shields.io/github/license/akhundMurad/typeid-python)
+
+> [!WARNING]
+> `main` may contain unreleased changes. For stable usage, use the latest release tag.
 
 A **high-performance Python implementation of [TypeIDs](https://github.com/jetpack-io/typeid)** — type-safe,
 sortable identifiers based on **UUIDv7**.
