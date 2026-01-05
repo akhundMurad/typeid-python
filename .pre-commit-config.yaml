@@ -1,0 +1,36 @@
+repos:
+  # ---------------------------------------------------------------------------
+  # Lint: Ruff + Black + mypy
+  # ---------------------------------------------------------------------------
+  - repo: local
+    hooks:
+      - id: lint
+        name: lint
+        entry: make lint
+        language: system
+        pass_filenames: false
+        stages: [pre-commit]
+
+  # ---------------------------------------------------------------------------
+  # Run tests: fast feedback on commits
+  # ---------------------------------------------------------------------------
+  - repo: local
+    hooks:
+      - id: test
+        name: test
+        entry: make test
+        language: system
+        pass_filenames: false
+        stages: [pre-commit]
+
+  # ---------------------------------------------------------------------------
+  # Run documentation tests: fast feedback on commits
+  # ---------------------------------------------------------------------------
+  - repo: local
+    hooks:
+      - id: test-docs
+        name: test-docs
+        entry: make test-docs
+        language: system
+        pass_filenames: false
+        stages: [pre-commit]
