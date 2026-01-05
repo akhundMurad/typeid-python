@@ -1,3 +1,3 @@
 # Factory
 
-::: typeid.factory
+::: typeid.core.factory

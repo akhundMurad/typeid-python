@@ -15,6 +15,22 @@ theme:
     - search.share
   icon:
     repo: fontawesome/brands/github
+  palette:
+    # Light mode
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/toggle-switch-off-outline
+        name: Switch to dark mode
+
+    # Dark mode
+    - scheme: slate
+      primary: blue
+      accent: blue
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to light mode
 
 plugins:
   - search
@@ -42,11 +58,17 @@ nav:
   - Index: index.md
   - Quickstart: quickstart.md
   - Performance: performance.md
+  - Concepts: concepts.md
+  - Explain: explain.md
+  - Framework Integrations:
+    - Overview: integrations/index.md
+    - Pydantic: integrations/pydantic.md
   - Reference:
       - TypeID: reference/typeid.md
       - Explain: reference/explain.md
       - CLI: reference/cli.md
       - Factory: reference/factory.md
-  - Concepts: concepts.md
-  - Explain: explain.md
+      - Framework Integrations:
+        - Pydantic:
+          - v2: reference/integrations/pydantic/v2.md
   - Contributing: contributing.md
