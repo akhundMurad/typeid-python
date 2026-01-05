@@ -23,7 +23,7 @@ jobs:
 
       - name: Sync dependencies (locked)
         run: |
-          uv sync --locked --all-groups
+          uv sync --locked --all-groups --all-extras
 
       - name: Build & install native extension (maturin develop)
         uses: PyO3/maturin-action@v1
@@ -55,7 +55,7 @@ jobs:
 
       - name: Sync dependencies (locked)
         run: |
-          uv sync --locked --all-groups
+          uv sync --locked --all-groups --all-extras
 
       - name: Build & install native extension (maturin develop)
         uses: PyO3/maturin-action@v1

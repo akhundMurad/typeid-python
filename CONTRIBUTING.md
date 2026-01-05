@@ -48,7 +48,7 @@ uv --version
 Create and sync the virtual environment (including dev dependencies):
 
 ```bash
-uv sync --all-groups
+uv sync --all-groups --all-extras
 ```
 
 This will:
