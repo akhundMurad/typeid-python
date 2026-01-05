@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Any, ClassVar, Generic, Literal, Optional, TypeVar, get_args, get_origin, overload
+from typing import Any, ClassVar, Generic, Literal, Optional, TypeVar, get_args, get_origin
 
 from pydantic_core import core_schema
 from pydantic.json_schema import JsonSchemaValue
@@ -109,19 +109,13 @@ class TypeIDField(Generic[T]):
     This returns a specialized *type* that Pydantic will validate into your core TypeID.
     """
 
-    @overload
-    def __class_getitem__(cls, prefix: str) -> type[TypeID]:
-        ...
-
-    @overload
-    def __class_getitem__(cls, prefix: tuple[str]) -> type[TypeID]:
-        ...
-
-    def __class_getitem__(cls, item: Any) -> type[TypeID]:
-        # Support:
-        # - TypeIDField["user"]
-        # - TypeIDField[Literal["user"]]
-        # - TypeIDField[("user",)]
+    def __class_getitem__(cls, item: str | tuple[str]) -> type[TypeID]:
+        """
+        Support:
+            - TypeIDField["user"]
+            - TypeIDField[Literal["user"]]
+            - TypeIDField[("user",)]
+        """
         if isinstance(item, tuple):
             if len(item) != 1:
                 raise TypeError("TypeIDField[...] expects a single prefix")

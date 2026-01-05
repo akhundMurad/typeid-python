@@ -61,7 +61,7 @@ from typeid.integrations.pydantic import TypeIDField
 class User(BaseModel):
     id: TypeIDField[Literal["user"]]
 
-tid = TypeID.from_str("user_01ke82dtesfn9bjcrzyzz54ya9")
+tid = TypeID.from_string("user_01ke82dtesfn9bjcrzyzz54ya9")
 u = User(id=tid)
 
 assert u.id == tid
@@ -104,7 +104,7 @@ class User(BaseModel):
     id: TypeIDField[Literal["user"]]
 
 u = User(id="user_01ke82dtesfn9bjcrzyzz54ya9")
-data = u.model_dump()
+data = u.model_dump(mode="json")
 
 assert data == {"id": "user_01ke82dtesfn9bjcrzyzz54ya9"}
 ```
