@@ -22,6 +22,7 @@ dependencies = ["uuid-utils>=0.12.0"]
 [project.optional-dependencies]
 cli = ["click"]
 yaml = ["PyYAML"]
+pydantic = ["pydantic>=2,<3"]
 
 [project.urls]
 Homepage = "https://github.com/akhundMurad/typeid-python"
