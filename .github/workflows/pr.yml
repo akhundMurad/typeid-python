@@ -34,7 +34,7 @@ jobs:
 
       - name: Run linters
         run: |
-          make check-linting
+          make lint
 
   test:
     runs-on: ubuntu-latest
