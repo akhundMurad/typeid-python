@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Any, ClassVar, Generic, Optional, TypeVar, overload
+from typing import Any, ClassVar, Generic, Literal, Optional, TypeVar, get_args, get_origin, overload
 
 from pydantic_core import core_schema
 from pydantic.json_schema import JsonSchemaValue
@@ -17,64 +17,19 @@ def _parse_typeid(value: Any) -> TypeID:
     Supports:
     - TypeID -> TypeID
     - str   -> parse into TypeID
-
-    Tries common parsing APIs to avoid coupling to one exact core method.
-    If none match, update this function to call your canonical parser.
     """
     if isinstance(value, TypeID):
         return value
 
     if isinstance(value, str):
-        # Try the common names
-        for name in ("from_str", "from_string", "parse"):
-            fn = getattr(TypeID, name, None)
-            if callable(fn):
-                return fn(value)  # type: ignore[misc]
-        # Fallback: constructor accepts string
-        try:
-            return TypeID(value)  # type: ignore[call-arg]
-        except Exception as e:
-            raise TypeError(
-                "TypeID Pydantic integration couldn't parse a string. "
-                "Please implement TypeID.from_str(s: str) (or .parse/.from_string), "
-                "or make TypeID(s: str) work. Original error: "
-                f"{e!r}"
-            ) from e
+        return TypeID.from_string(value)
 
     raise TypeError(f"TypeID must be str or TypeID, got {type(value).__name__}")
-
-
-def _get_prefix(tid: TypeID) -> Optional[str]:
-    """
-    Extract prefix from TypeID. Adjust this if your core uses a different attribute.
-    """
-    # Common: tid.prefix
-    pref = getattr(tid, "prefix", None)
-    if isinstance(pref, str):
-        return pref
-    return None
-
-
-def _to_str(tid: TypeID) -> str:
-    """
-    Convert TypeID to its canonical string representation.
-    """
-    # Prefer a dedicated method if you have one
-    for name in ("to_string", "__str__"):
-        fn = getattr(tid, name, None)
-        if callable(fn):
-            try:
-                return fn() if name == "to_string" else str(tid)
-            except Exception:
-                pass
-    return str(tid)
 
 
 @dataclass(frozen=True)
 class _TypeIDMeta:
     expected_prefix: Optional[str] = None
-    # Optional: if you have a known regex for full string form, set it for JSON schema
-    # pattern: Optional[str] = None
     pattern: Optional[str] = None
     example: Optional[str] = None
 
@@ -93,9 +48,8 @@ class _TypeIDFieldBase:
 
         exp = cls._typeid_meta.expected_prefix
         if exp is not None:
-            got = _get_prefix(tid)
-            if got != exp:
-                raise ValueError(f"TypeID prefix mismatch: expected '{exp}', got '{got}'")
+            if tid.prefix != exp:
+                raise ValueError(f"TypeID prefix mismatch: expected '{exp}', got '{tid.prefix}'")
 
         return tid
 
@@ -112,7 +66,7 @@ class _TypeIDFieldBase:
         return core_schema.no_info_plain_validator_function(
             cls._validate,
             serialization=core_schema.plain_serializer_function_ser_schema(
-                lambda v: _to_str(v),
+                lambda v: str(v),
                 when_used="json",
             ),
         )
@@ -156,26 +110,42 @@ class TypeIDField(Generic[T]):
     """
 
     @overload
-    def __class_getitem__(cls, prefix: str) -> type[TypeID]: ...
+    def __class_getitem__(cls, prefix: str) -> type[TypeID]:
+        ...
+
     @overload
-    def __class_getitem__(cls, prefix: tuple[str]) -> type[TypeID]: ...
+    def __class_getitem__(cls, prefix: tuple[str]) -> type[TypeID]:
+        ...
 
     def __class_getitem__(cls, item: Any) -> type[TypeID]:
-        # Support TypeIDField["user"] or TypeIDField[("user",)]
+        # Support:
+        # - TypeIDField["user"]
+        # - TypeIDField[Literal["user"]]
+        # - TypeIDField[("user",)]
         if isinstance(item, tuple):
-            if len(item) != 1 or not isinstance(item[0], str):
-                raise TypeError("TypeIDField[...] expects a single string prefix, e.g. TypeIDField['user']")
-            prefix = item[0]
-        else:
-            if not isinstance(item, str):
-                raise TypeError("TypeIDField[...] expects a string prefix, e.g. TypeIDField['user']")
+            if len(item) != 1:
+                raise TypeError("TypeIDField[...] expects a single prefix")
+            item = item[0]
+
+        # Literal["user"]
+        if get_origin(item) is Literal:
+            args = get_args(item)
+            if len(args) != 1 or not isinstance(args[0], str):
+                raise TypeError("TypeIDField[Literal['prefix']] expects a single string literal")
+            prefix = args[0]
+
+        # Plain "user"
+        elif isinstance(item, str):
             prefix = item
+
+        else:
+            raise TypeError("TypeIDField[...] expects a string prefix or Literal['prefix']")
 
         name = f"TypeIDField_{prefix}"
 
         # Optionally add a simple example that looks like TypeID format
         # You can improve this to a real example generator if your core has one.
-        example = f"{prefix}_01hxxxxxxxxxxxxxxxxxxxxxxxxx"
+        example = f"{prefix}_01hxxxxxxxxxxxxxxxxxxxxxxx"
 
         # Create a new subclass of _TypeIDFieldBase with fixed meta
         field_cls = type(

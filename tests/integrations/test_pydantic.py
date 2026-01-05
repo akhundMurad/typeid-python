@@ -1,3 +1,4 @@
+from typing import Literal
 import pytest
 from pydantic import BaseModel, ValidationError
 
@@ -10,7 +11,7 @@ ORDER_TYPEID_STR = str(TypeID("order"))
 
 
 class M(BaseModel):
-    id: TypeIDField["user"]
+    id: TypeIDField[Literal["user"]]
 
 
 def test_accepts_str():
