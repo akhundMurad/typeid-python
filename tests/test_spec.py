@@ -2,7 +2,7 @@ import pytest
 from uuid_utils import UUID
 
 from typeid import TypeID
-from typeid.errors import TypeIDException
+from typeid.core.errors import TypeIDException
 
 
 def test_invalid_spec(invalid_spec: list) -> None:

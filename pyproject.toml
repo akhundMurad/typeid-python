@@ -29,7 +29,7 @@ Repository = "https://github.com/akhundMurad/typeid-python"
 "Bug Tracker" = "https://github.com/akhundMurad/typeid-python/issues"
 
 [project.scripts]
-typeid = "typeid.cli:cli"
+typeid = "typeid.cli.main:cli"
 
 [dependency-groups]
 dev = [

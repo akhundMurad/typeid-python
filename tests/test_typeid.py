@@ -4,7 +4,7 @@ import pytest
 import uuid_utils
 
 from typeid import TypeID
-from typeid.errors import SuffixValidationException
+from typeid.core.errors import SuffixValidationException
 
 
 def test_default_suffix() -> None:

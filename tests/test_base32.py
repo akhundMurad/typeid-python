@@ -1,4 +1,4 @@
-from typeid.base32 import decode, encode
+from typeid.codecs.base32 import decode, encode
 
 
 def test_encode_decode_logic() -> None:
