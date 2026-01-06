@@ -1,10 +1,12 @@
 # TypeID Python
 
-[![Run Tests](https://github.com/akhundMurad/typeid-python/actions/workflows/test.yml/badge.svg)](https://github.com/akhundMurad/typeid-python/actions/workflows/test.yml)
-[![PyPI Downloads](https://static.pepy.tech/personalized-badge/typeid-python?period=total&units=INTERNATIONAL_SYSTEM&left_color=BLACK&right_color=GREEN&left_text=downloads)](https://pepy.tech/projects/typeid-python)
 [![PyPI - Version](https://img.shields.io/pypi/v/typeid-python?color=green)](https://pypi.org/project/typeid-python/)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/typeid-python?color=green)](https://pypi.org/project/typeid-python/)
+[![PyPI Downloads](https://static.pepy.tech/personalized-badge/typeid-python?period=total&units=INTERNATIONAL_SYSTEM&left_color=BLACK&right_color=GREEN&left_text=downloads)](https://pepy.tech/projects/typeid-python)
+![GitHub License](https://img.shields.io/github/license/akhundMurad/typeid-python)
 
+> [!WARNING]
+> `main` may contain unreleased changes. For stable usage, use the latest release tag.
 
 A **high-performance Python implementation of [TypeIDs](https://github.com/jetpack-io/typeid)** — type-safe,
 sortable identifiers based on **UUIDv7**.
@@ -21,11 +23,12 @@ This library provides a Python package with Rust acceleration.
 ## Key features
 
 - ✅ UUIDv7-based, time-sortable identifiers
-- ✅ Type-safe prefixes (`user_`, `order_`, …)
-- ✅ Human-readable and URL-safe
-- ✅ Fast generation & parsing (Rust-accelerated)
-- ✅ CLI tools (`new`, `encode`, `decode`, `explain`)
 - ✅ Schema-based ID explanations (JSON / YAML)
+- ✅ Fast generation & parsing (Rust-accelerated)
+- ✅ Multiple integrations (Pydantic, FastAPI, ...)
+- ✅ Type-safe prefixes (`user_`, `order_`, ...)
+- ✅ Human-readable and URL-safe
+- ✅ CLI tools (`new`, `encode`, `decode`, `explain`)
 - ✅ Fully offline, no external services
 
 ## Performance
@@ -70,8 +73,9 @@ Included:
 ### Other optional extras
 
 ```console
-$ pip install typeid-python[yaml]   # YAML schema support
-$ pip install typeid-python[cli]    # CLI tools
+$ pip install typeid-python[yaml]     # YAML schema support
+$ pip install typeid-python[cli]      # CLI tools
+$ pip install typeid-python[pydantic] # Pydantic integration
 ```
 
 Extras are **strictly optional**.
@@ -148,6 +152,45 @@ Encode:
 ```console
 $ typeid encode 0188bac7-4afa-78aa-bc3b-bd1eef28d881 --prefix user
 ```
+
+## Framework integrations
+
+TypeID is **framework-agnostic by design**.
+Integrations are provided as optional adapters, installed explicitly and kept separate from the core.
+
+### Available integrations
+
+* **Pydantic (v2)**
+  Native field type with validation and JSON Schema support.
+
+  ```bash
+  pip install typeid-python[pydantic]
+  ```
+
+  ```python
+  from typing import Literal
+  from pydantic import BaseModel
+  from typeid.integrations.pydantic import TypeIDField
+
+  class User(BaseModel):
+      id: TypeIDField[Literal["user"]]
+  ```
+
+* **FastAPI**
+  Works automatically via Pydantic (request/response models, OpenAPI).
+
+  ```bash
+  pip install typeid-python[fastapi]
+  ```
+
+* **SQLAlchemy**
+  Column types for storing TypeIDs (typically as strings).
+
+  ```bash
+  pip install typeid-python[sqlalchemy]
+  ```
+
+All integrations are **opt-in via extras** and never affect the core package.
 
 ## ✨ `typeid explain` — understand any ID
 

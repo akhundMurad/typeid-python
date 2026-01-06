@@ -2,8 +2,8 @@ import pytest
 from uuid_utils import uuid7
 
 from typeid import base32
-from typeid.errors import PrefixValidationException, SuffixValidationException
-from typeid.validation import validate_prefix, validate_suffix_and_decode
+from typeid.core.errors import PrefixValidationException, SuffixValidationException
+from typeid.core.validation import validate_prefix, validate_suffix_and_decode
 
 
 def test_validate_correct_prefix() -> None:

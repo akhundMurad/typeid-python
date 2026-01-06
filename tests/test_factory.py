@@ -1,7 +1,7 @@
 import pytest
 
 from typeid import TypeID, cached_typeid_factory, typeid_factory
-from typeid.errors import PrefixValidationException
+from typeid.core.errors import PrefixValidationException
 
 
 def test_typeid_factory_generates_typeid_with_prefix():

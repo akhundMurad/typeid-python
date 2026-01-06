@@ -1,3 +1,3 @@
 # CLI
 
-::: typeid.cli
+::: typeid.cli.main

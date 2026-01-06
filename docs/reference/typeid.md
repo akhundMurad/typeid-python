@@ -1,3 +1,3 @@
 # TypeID
 
-::: typeid.typeid.TypeID
+::: typeid.TypeID

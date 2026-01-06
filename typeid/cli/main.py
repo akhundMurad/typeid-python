@@ -4,7 +4,9 @@ from typing import Optional
 import click
 from uuid_utils import UUID
 
-from typeid import TypeID, base32, from_uuid, get_prefix_and_suffix
+from typeid import TypeID
+from typeid.codecs import base32
+from typeid.core.parsing import get_prefix_and_suffix
 from typeid.explain.discovery import discover_schema_path
 from typeid.explain.engine import explain as explain_engine
 from typeid.explain.formatters import format_explanation_json, format_explanation_pretty
@@ -42,7 +44,7 @@ def encode(uuid: str, prefix: Optional[str] = None) -> None:
     (e.g. stored in a database) and need to be represented as TypeIDs.
     """
     uuid_obj = UUID(uuid)
-    typeid = from_uuid(suffix=uuid_obj, prefix=prefix)
+    typeid = TypeID.from_uuid(suffix=uuid_obj, prefix=prefix)
 
     click.echo(str(typeid))
 
@@ -151,7 +153,3 @@ def explain(
         click.echo(format_explanation_json(exp))
     else:
         click.echo(format_explanation_pretty(exp))
-
-
-if __name__ == "__main__":
-    cli()
