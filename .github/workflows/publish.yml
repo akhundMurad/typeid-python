@@ -174,7 +174,6 @@ jobs:
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           packages-dir: out
-          repository-url: https://test.pypi.org/legacy/
 
   publish-docs:
     runs-on: ubuntu-latest
