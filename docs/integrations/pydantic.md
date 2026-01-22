@@ -12,14 +12,6 @@ The adapter:
 
 ---
 
-## Installation
-
-```bash
-pip install typeid-python[pydantic]
-```
-
-This installs the latest version of Pydantic v2.
-
 ## Basic usage
 
 Use `TypeIDField` with a fixed prefix.
@@ -160,13 +152,6 @@ This works cleanly with:
 
 Using `Literal` makes the prefix a real compile-time constant and avoids
 annotation edge cases.
-
-## FastAPI
-
-FastAPI uses Pydantic v2, so no extra integration is needed.
-
-TypeID fields work automatically in request and response models,
-including OpenAPI output, as soon as you use them in a Pydantic model.
 
 ## Design notes
 
