@@ -75,7 +75,6 @@ Included:
 ```console
 $ pip install typeid-python[yaml]     # YAML schema support
 $ pip install typeid-python[cli]      # CLI tools
-$ pip install typeid-python[pydantic] # Pydantic integration
 ```
 
 Extras are **strictly optional**.
@@ -163,10 +162,6 @@ Integrations are provided as optional adapters, installed explicitly and kept se
 * **Pydantic (v2)**
   Native field type with validation and JSON Schema support.
 
-  ```bash
-  pip install typeid-python[pydantic]
-  ```
-
   ```python
   from typing import Literal
   from pydantic import BaseModel
@@ -176,19 +171,9 @@ Integrations are provided as optional adapters, installed explicitly and kept se
       id: TypeIDField[Literal["user"]]
   ```
 
-* **FastAPI**
-  Works automatically via Pydantic (request/response models, OpenAPI).
+* **FastAPI** (Coming Soon 🚧)
 
-  ```bash
-  pip install typeid-python[fastapi]
-  ```
-
-* **SQLAlchemy**
-  Column types for storing TypeIDs (typically as strings).
-
-  ```bash
-  pip install typeid-python[sqlalchemy]
-  ```
+* **SQLAlchemy** (Coming Soon 🚧)
 
 All integrations are **opt-in via extras** and never affect the core package.
 

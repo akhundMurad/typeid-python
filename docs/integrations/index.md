@@ -20,12 +20,12 @@ Native support for using TypeID in Pydantic v2 models.
 * Clean JSON Schema / OpenAPI output
 
 ```bash
-pip install typeid-python[pydantic]
+pip install typeid-python pydantic
 ```
 
 See: [Pydantic v2](https://akhundmurad.github.io/typeid-python/integrations/pydantic/) documentation page for details and examples.
 
-### FastAPI
+### FastAPI (Coming Soon 🚧)
 
 FastAPI builds on Pydantic v2, so TypeID works automatically in:
 
@@ -35,23 +35,9 @@ FastAPI builds on Pydantic v2, so TypeID works automatically in:
 
 No separate FastAPI-specific adapter is required.
 
-```bash
-pip install typeid-python[fastapi]
-```
-
-See: [Pydantic v2](https://akhundmurad.github.io/typeid-python/integrations/fastapi/) documentation page for details and examples.
-
-### SQLAlchemy
+### SQLAlchemy (Coming Soon 🚧)
 
 Column types for storing TypeIDs in relational databases.
-
-Typical usage stores the full TypeID string (`prefix_suffix`) for clarity and debuggability.
-
-```bash
-pip install typeid-python[sqlalchemy]
-```
-
-See: [Pydantic v2](https://akhundmurad.github.io/typeid-python/integrations/sqlalchemy/) documentation page for details and examples.
 
 ## Design notes
 
