@@ -65,6 +65,7 @@ class _TypeIDFieldBase:
         # Using a plain validator keeps it simple and fast.
         return core_schema.no_info_plain_validator_function(
             cls._validate,
+            json_schema_input_schema=core_schema.str_schema(),
             serialization=core_schema.plain_serializer_function_ser_schema(
                 lambda v: str(v),
                 when_used="json",
@@ -73,7 +74,9 @@ class _TypeIDFieldBase:
 
     @classmethod
     def __get_pydantic_json_schema__(cls, core_schema_: core_schema.CoreSchema, handler: Any) -> JsonSchemaValue:
-        schema = handler(core_schema_)
+        # Pass the json_schema_input_schema to the handler instead of the validator function schema
+        # This allows Pydantic to generate a proper JSON schema from the string type
+        schema = handler(core_schema_.get("json_schema_input_schema", core_schema_))
 
         # Ensure JSON schema is "string"
         schema.update(
