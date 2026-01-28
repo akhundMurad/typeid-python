@@ -1,6 +1,6 @@
 [project]
 name = "typeid-python"
-version = "0.3.8"
+version = "0.3.9"
 description = "Python implementation of TypeIDs: type-safe, K-sortable, and globally unique identifiers inspired by Stripe IDs"
 authors = [{ name = "Murad Akhundov", email = "akhundov1murad@gmail.com" }]
 requires-python = ">=3.10,<4"
