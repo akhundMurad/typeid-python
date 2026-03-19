@@ -90,6 +90,22 @@ jobs:
           - os: macos-latest
             target: x86_64-apple-darwin
             python-version: "3.14"
+          # Linux ARM64 (cross-compiled on ubuntu-latest via maturin-action)
+          - os: ubuntu-latest
+            target: aarch64-unknown-linux-gnu
+            python-version: "3.10"
+          - os: ubuntu-latest
+            target: aarch64-unknown-linux-gnu
+            python-version: "3.11"
+          - os: ubuntu-latest
+            target: aarch64-unknown-linux-gnu
+            python-version: "3.12"
+          - os: ubuntu-latest
+            target: aarch64-unknown-linux-gnu
+            python-version: "3.13"
+          - os: ubuntu-latest
+            target: aarch64-unknown-linux-gnu
+            python-version: "3.14"
 
     steps:
       - name: Checkout
