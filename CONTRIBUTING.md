@@ -211,6 +211,21 @@ Performance-related PRs should explain:
 - what benchmark changed
 - why the change is safe
 
+## Commit messages
+
+This project follows the Conventional Commits specification.
+
+Examples:
+
+- `feat: add a new feature`
+- `fix(parser): handle invalid input`
+- `docs: update documentation`
+- `chore: update tooling`
+
+Install the commit message hook with:
+
+```bash
+uv run pre-commit install --hook-type commit-msg
 ---
 
 Happy hacking 🚀

@@ -34,3 +34,11 @@ repos:
         language: system
         pass_filenames: false
         stages: [pre-commit]
+
+  #---
+  - repo: https://github.com/commitizen-tools/commitizen
+    rev: v4.18.0  # Replace with latest tag
+    hooks:
+      - id: commitizen
+      - id: commitizen-branch
+        stages: [pre-push]
