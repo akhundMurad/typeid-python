@@ -52,6 +52,7 @@ dev = [
   "pre-commit>=4.5.1",
   "httpx>=0.28.1",
   "pydantic>=2,<3",
+  "commitizen>=4.18.0",
 ]
 
 [tool.black]
@@ -74,3 +75,8 @@ manifest-path = "rust-base32/Cargo.toml"
 module-name = "typeid._base32"
 features = ["pyo3/extension-module"]
 include = ["LICENSE", "README.md", "typeid/**", "rust-base32/**"]
+
+[tool.commitizen]
+name = "cz_conventional_commits"
+version_provider = "uv"
+update_changelog_on_bump = true
