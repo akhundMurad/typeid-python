@@ -55,7 +55,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        # ubuntu-latest is intentionally NOT a base os: its Linux targets are
+        # listed explicitly under include so each arch gets its own job. Adding
+        # them here as base rows would let the aarch64 include entries merge into
+        # (and overwrite the target of) the native x86_64 rows, dropping x86_64.
+        os: [windows-latest]
         python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
         include:
           # macOS ARM64 (native on macos-latest which is ARM)
@@ -89,6 +93,22 @@ jobs:
             python-version: "3.13"
           - os: macos-latest
             target: x86_64-apple-darwin
+            python-version: "3.14"
+          # Linux x86_64 (native on ubuntu-latest via maturin-action)
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+            python-version: "3.10"
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+            python-version: "3.11"
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+            python-version: "3.12"
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+            python-version: "3.13"
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
             python-version: "3.14"
           # Linux ARM64 (cross-compiled on ubuntu-latest via maturin-action)
           - os: ubuntu-latest
