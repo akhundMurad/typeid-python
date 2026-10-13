@@ -9,7 +9,7 @@ Thank you for taking the time to contribute ❤️
 ### Core requirements (all contributors)
 
 - Linux or macOS (development is primarily tested on Unix-like systems)
-- A supported Python version (Python **3.10+**; latest tested: **Python 3.14**)
+- A supported Python version (Python **3.10+**; latest tested: **Python 3.15**)
 - [`uv`](https://astral.sh/uv/) – fast Python package manager and environment tool
 
 ### Optional (for Rust acceleration work)
