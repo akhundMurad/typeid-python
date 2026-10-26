@@ -63,6 +63,7 @@ nav:
   - Framework Integrations:
     - Overview: integrations/index.md
     - Pydantic: integrations/pydantic.md
+    - Django REST Framework: integrations/drf.md
   - Reference:
       - TypeID: reference/typeid.md
       - Explain: reference/explain.md
@@ -71,4 +72,5 @@ nav:
       - Framework Integrations:
         - Pydantic:
           - v2: reference/integrations/pydantic/v2.md
+        - Django REST Framework: reference/integrations/drf.md
   - Contributing: contributing.md

@@ -25,6 +25,20 @@ pip install typeid-python pydantic
 
 See: [Pydantic v2](https://akhundmurad.github.io/typeid-python/integrations/pydantic/) documentation page for details and examples.
 
+### Django REST Framework
+
+A serializer field for DRF APIs.
+
+* Prefix-aware validation
+* Accepts `str` and `TypeID`
+* Serializes as string, and renders UUID primary keys as TypeIDs
+
+```bash
+pip install typeid-python djangorestframework
+```
+
+See: [Django REST Framework](https://akhundmurad.github.io/typeid-python/integrations/drf/) documentation page for details and examples.
+
 ### FastAPI (Coming Soon 🚧)
 
 FastAPI builds on Pydantic v2, so TypeID works automatically in:

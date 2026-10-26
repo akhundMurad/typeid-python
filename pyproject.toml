@@ -52,6 +52,8 @@ dev = [
   "pre-commit>=4.5.1",
   "httpx>=0.28.1",
   "pydantic>=2,<3",
+  "django>=4.2",
+  "djangorestframework>=3.14",
   "commitizen>=4.18.0",
 ]
 
