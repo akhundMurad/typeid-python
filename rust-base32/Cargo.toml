@@ -1,6 +1,6 @@
 [package]
 name = "typeid-base32"
-version = "0.3.10"
+version = "0.3.11"
 edition = "2021"
 
 description = "Rust-accelerated base32 codec for typeid-python"
