@@ -2,7 +2,13 @@ from typing import Any, Optional
 import uuid
 
 import uuid_utils
-from rest_framework import serializers  # type: ignore[import-untyped]
+
+try:
+    from rest_framework import serializers  # type: ignore[import-untyped]
+except ImportError as exc:
+    raise ImportError(
+        "typeid.integrations.drf requires Django REST Framework. Install it with `pip install djangorestframework`."
+    ) from exc
 
 from typeid import TypeID
 from typeid.core.errors import TypeIDException

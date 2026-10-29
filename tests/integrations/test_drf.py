@@ -1,3 +1,5 @@
+import importlib
+import sys
 import uuid
 
 import pytest
@@ -83,3 +85,11 @@ def test_serializes_stdlib_uuid_with_prefix():
 def test_invalid_prefix_argument():
     with pytest.raises(PrefixValidationException):
         TypeIDField(prefix="Not Valid")
+
+
+def test_missing_drf_raises_helpful_import_error(monkeypatch):
+    monkeypatch.setitem(sys.modules, "rest_framework", None)
+    monkeypatch.delitem(sys.modules, "typeid.integrations.drf")
+    monkeypatch.delitem(sys.modules, "typeid.integrations.drf.fields")
+    with pytest.raises(ImportError, match="pip install djangorestframework"):
+        importlib.import_module("typeid.integrations.drf")
